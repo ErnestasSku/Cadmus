@@ -1,39 +1,29 @@
 <script lang="ts">
-  import Greet from './lib/Greet.svelte'
+
+
+
 </script>
 
-<main class="container">
-  <h1>Welcome to Tauri!</h1>
-
-  <div class="row">
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo vite" alt="Vite Logo" />
-    </a>
-    <a href="https://tauri.app" target="_blank">
-      <img src="/tauri.svg" class="logo tauri" alt="Tauri Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank">
-      <img src="/svelte.svg" class="logo svelte" alt="Svelte Logo" />
-    </a>
+<main class="container h-full">
+  
+  <div class="flex flex-col items-center">
+    <div class="h-16"/>
+    <h1 class="text-center text-6xl mb-16 text-lime" style="color: #36D399;">Cadmus</h1>
+    <button class="w-max m-1 button-pop-out">New story</button>
+    <button class="w-max m-1 button-pop-out">Open existing story</button>
   </div>
-
-  <p>
-    Click on the Tauri, Vite, and Svelte logos to learn more.
-  </p>
-
-  <div class="row">
-    <Greet />
-  </div>
-
 
 </main>
 
-<style>
-  .logo.vite:hover {
-    filter: drop-shadow(0 0 2em #747bff);
+<style lang="postcss" type="text/postcss">
+
+  button:hover {
+    filter: drop-shadow(0 0 2em #36D399);
+    color:#36D399;
+  }
+  .button-pop-out {
+    @apply scale-100 hover:scale-110 duration-300 ease-linear transition-all;
   }
 
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00);
-  }
+
 </style>
