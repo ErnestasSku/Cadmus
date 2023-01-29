@@ -63,7 +63,8 @@
         "height": 600,
         "resizable": true,
         "title": "Cadmus",
-        "width": 800
+        "width": 800,
+        "theme": "Dark"
       }
     ]
   }
