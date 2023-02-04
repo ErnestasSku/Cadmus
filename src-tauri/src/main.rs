@@ -3,6 +3,8 @@
     windows_subsystem = "windows"
 )]
 
+use tauri::{Menu, Submenu, MenuEntry, MenuItem};
+
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
