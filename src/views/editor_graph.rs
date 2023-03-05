@@ -7,12 +7,16 @@ use iced::{
     Color, Element, Length, Point, Rectangle, Theme, Vector,
 };
 
+use crate::components::canvas_input::{self, CanvasInput};
+
 pub struct EditorGraph {
     background: Cache,
     _items: Cache,
     state: Vec<Point>,
     scaling: f32,
     translation: Vector,
+
+    canvas_inputs_test: Vec<CanvasInput>,
 }
 
 impl EditorGraph {
@@ -26,12 +30,32 @@ impl EditorGraph {
     pub fn update(&mut self, message: EditorGraphMessage) {
         match message {
             EditorGraphMessage::AddBlock(point) => {
-                self.state.push(point);
+                // self.state.push(point);
+                self.canvas_inputs_test.push(CanvasInput::new(
+                    point.x,
+                    point.y,
+                    self.canvas_inputs_test.len() as i32 + 1,
+                ));
                 self.background.clear();
             }
             EditorGraphMessage::RemoveBlock => todo!(),
             EditorGraphMessage::Translated(_) => todo!(),
             EditorGraphMessage::Scaled(_, _) => todo!(),
+            EditorGraphMessage::Input(msg) => match msg {
+                canvas_input::Message::GainFocus(id) => {
+                    self.canvas_inputs_test
+                        .iter_mut()
+                        .find(|x| x.id == id)
+                        .and_then(|x| Some(x.update_state(true)));
+                }
+                canvas_input::Message::LostFocus(id) => {
+                    self.canvas_inputs_test
+                        .iter_mut()
+                        .find(|x| x.id == id)
+                        .and_then(|x| Some(x.update_state(false)));
+                }
+                canvas_input::Message::KeyPressed(_) => todo!(),
+            },
         }
     }
 }
@@ -44,17 +68,21 @@ impl Default for EditorGraph {
             state: Vec::default(),
             scaling: 1.0,
             translation: Vector::default(),
+
+            canvas_inputs_test: Vec::default(), // canvas_inputs_test: CanvasInput::
         }
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum EditorGraphMessage {
     // AddBlock,
     AddBlock(Point),
     RemoveBlock,
     Translated(Vector),
     Scaled(f32, Option<Vector>),
+
+    Input(canvas_input::Message),
 }
 
 impl canvas::Program<EditorGraphMessage> for EditorGraph {
@@ -77,6 +105,16 @@ impl canvas::Program<EditorGraphMessage> for EditorGraph {
                 frame.fill(&Path::circle(*p, 5.0), Color::from_rgb8(0, 255, 0));
             }
 
+            //TEST
+
+            // for i in self.canvas_inputs_test.iter() {
+            //     i.view();
+            // }
+
+            //
+
+            frame.fill_text(format!("{} ", self.canvas_inputs_test.len()));
+
             frame.with_save(|frame| {
                 frame.translate(center);
                 frame.scale(self.scaling);
@@ -84,7 +122,25 @@ impl canvas::Program<EditorGraphMessage> for EditorGraph {
             })
         });
 
-        vec![background]
+        //TEST
+        // let a = CanvasInput::draw(&CanvasInput::new(50.0, 50.0), &(), _theme, bounds, _cursor);
+
+        let mut a = vec![];
+        for i in self.canvas_inputs_test.iter() {
+            a.push(i.view(&(), &_theme, bounds, _cursor.clone()))
+        }
+
+        //
+
+        // vec![background].iter().chain(a.iter()).collect()
+
+        let mut ret = vec![background];
+        for i in a.iter() {
+            ret.push(i.clone());
+        }
+        // let b: Vec<Geometry> = ret.iter_mut().chain(a.iter_mut()).collect();
+
+        ret
     }
 
     fn update(
@@ -99,6 +155,22 @@ impl canvas::Program<EditorGraphMessage> for EditorGraph {
         }
 
         let cursor_point = cursor.position_in(&bounds).unwrap_or(Point::ORIGIN);
+
+        let a: Vec<(canvas::event::Status, Option<EditorGraphMessage>)> = self
+            .canvas_inputs_test
+            .iter()
+            .map(|x| x.update(&mut (), event.clone(), bounds.clone(), cursor.clone()))
+            .filter(|x| x.0 != canvas::event::Status::Ignored)
+            .map(|(s, m)| {
+                let new = m.map(|x| EditorGraphMessage::Input(x));
+
+                (s, new)
+            })
+            .collect();
+
+        if !a.is_empty() {
+            return a[0];
+        }
 
         match event {
             canvas::Event::Mouse(mouse) => {

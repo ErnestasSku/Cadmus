@@ -1,4 +1,4 @@
-use iced::{Element, Length, Sandbox};
+use iced::{Element, Length, Sandbox, Theme};
 
 use iced::widget::{column, container};
 
@@ -45,5 +45,9 @@ impl Sandbox for Editor {
             .width(Length::Fill)
             .height(Length::Fill)
             .into()
+    }
+
+    fn theme(&self) -> iced::Theme {
+        Theme::Dark
     }
 }

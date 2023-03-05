@@ -2,6 +2,7 @@
 use iced::{Sandbox, Settings};
 
 mod views;
+mod components;
 
 fn main() -> iced::Result {
 
