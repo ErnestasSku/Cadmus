@@ -1,15 +1,17 @@
 <script lang="ts">
   import StoryInput from "./StoryInput.svelte";
 
-  let stories = [];
+  let storyBlocks = [];
+
   function addNew() {
-    new StoryInput({
-      target: document.getElementById("canvas"),
-    });
-    // stories = [...stories, {}]
+    // new StoryInput({
+      // target: document.getElementById("canvas"),
+    // });
+    storyBlocks = [...storyBlocks, {}];
   }
 
   let moving: Boolean = false;
+  let capturedMouse: Boolean = false;
   let x: number = 0;
   let y: number = 0;
 
@@ -17,7 +19,9 @@
     Math.min(Math.max(num, min), max);
 
   function onMouseDown() {
-    // moving = true;
+    if (!capturedMouse) {
+      moving = true;
+    }
   }
 
   function onMouseMove(e: MouseEvent) {
@@ -27,6 +31,8 @@
     }
   }
 
+  $: console.log(x, y);
+
   function onMouseUp() {
     moving = false;
   }
@@ -35,6 +41,15 @@
   function onMouseWheel(e: WheelEvent) {
     // scale = clamp((scale + e.deltaY / 500), 0.5, 10);
   }
+
+  function captureMouse() {
+    capturedMouse = true;
+  }
+
+  function releaseMouse() {
+    capturedMouse = false;
+  }
+
 </script>
 
 <main>
@@ -47,7 +62,11 @@
     on:mousedown={onMouseDown}
     style="--x: {x}; --y: {y}; --scale: {scale}"
   >
-    <!-- <div id="rect"></div> -->
+
+  {#each storyBlocks as storyBlock}
+    <StoryInput on:captureMouse={captureMouse} on:releaseMouse={releaseMouse}/>
+  {/each}
+
   </div>
 </main>
 

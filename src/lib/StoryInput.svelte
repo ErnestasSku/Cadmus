@@ -1,5 +1,6 @@
 <script lang="ts">
   import ConnectionInput from "./ConnectionInput.svelte";
+  import { createEventDispatcher } from "svelte";
 
   export let connections = [{}];
   export let top: number = 500;
@@ -10,6 +11,8 @@
   let moving: boolean = false;
   let cursor: string = "default";
 
+  const dispatch = createEventDispatcher();
+
   function addNewConnection(e: MouseEvent) {
     //TODO add logic to add only if it doesn't have any content
     connections = [...connections, {}];
@@ -18,6 +21,7 @@
   function onmousedown(e: MouseEvent) {
     if (!mouseCaptured) {
       moving = true;
+      dispatch('captureMouse', {});
     }
   }
 
@@ -30,6 +34,7 @@
 
   function onmouseup(e: MouseEvent) {
     moving = false;
+    dispatch('releaseMouse', {});
   }
 
   function captureMouse(e: MouseEvent) {
@@ -65,9 +70,13 @@
       on:mouseleave={releaseMouse}
     />
     <hr class="line" />
-    {#each connections as connection}
-      <ConnectionInput {connection} />
-    {/each}
+
+    <div on:mouseenter={captureMouse} on:mouseleave={releaseMouse}>
+      {#each connections as connection}
+        <ConnectionInput {connection} />
+      {/each}
+    </div>
+
     <button
       on:click={addNewConnection}
       id="newConnection"
