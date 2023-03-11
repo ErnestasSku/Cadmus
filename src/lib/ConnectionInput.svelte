@@ -13,7 +13,6 @@
 </main>
 
 <style>
-
   div {
     display: flex;
     justify-content: center;
@@ -44,5 +43,4 @@
   .dot:hover {
     @apply scale-100 hover:scale-125 duration-300 ease-linear transition-all;
   }
-
 </style>

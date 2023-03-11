@@ -21,7 +21,7 @@
   function onmousedown(e: MouseEvent) {
     if (!mouseCaptured) {
       moving = true;
-      dispatch('captureMouse', {});
+      dispatch("captureMouse", {});
     }
   }
 
@@ -34,7 +34,7 @@
 
   function onmouseup(e: MouseEvent) {
     moving = false;
-    dispatch('releaseMouse', {});
+    dispatch("releaseMouse", {});
   }
 
   function captureMouse(e: MouseEvent) {

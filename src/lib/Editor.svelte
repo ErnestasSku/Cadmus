@@ -5,7 +5,7 @@
 
   function addNew() {
     // new StoryInput({
-      // target: document.getElementById("canvas"),
+    // target: document.getElementById("canvas"),
     // });
     storyBlocks = [...storyBlocks, {}];
   }
@@ -49,7 +49,6 @@
   function releaseMouse() {
     capturedMouse = false;
   }
-
 </script>
 
 <main>
@@ -62,11 +61,12 @@
     on:mousedown={onMouseDown}
     style="--x: {x}; --y: {y}; --scale: {scale}"
   >
-
-  {#each storyBlocks as storyBlock}
-    <StoryInput on:captureMouse={captureMouse} on:releaseMouse={releaseMouse}/>
-  {/each}
-
+    {#each storyBlocks as storyBlock}
+      <StoryInput
+        on:captureMouse={captureMouse}
+        on:releaseMouse={releaseMouse}
+      />
+    {/each}
   </div>
 </main>
 
