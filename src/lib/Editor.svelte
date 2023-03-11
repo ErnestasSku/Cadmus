@@ -1,10 +1,12 @@
 <script lang="ts">
   import StoryInput from "./StoryInput.svelte";
 
+  let stories = [];
   function addNew() {
     new StoryInput({
       target: document.getElementById("canvas"),
     });
+    // stories = [...stories, {}]
   }
 
   let moving: Boolean = false;
@@ -37,7 +39,7 @@
 
 <main>
   <div id="top-section">
-    <button class="btn btn-accent" on:click={addNew}>Press meh</button>
+    <button class="btn btn-accent" on:click={addNew}>Press me</button>
   </div>
 
   <div

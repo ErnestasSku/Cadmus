@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let conn;
+  export let connection;
 </script>
 
 <main class="mt-1">
