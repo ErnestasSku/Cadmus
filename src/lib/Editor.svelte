@@ -3,17 +3,24 @@
 
   let storyBlocks = [];
 
-  function addNew() {
-    // new StoryInput({
-    // target: document.getElementById("canvas"),
-    // });
-    storyBlocks = [...storyBlocks, {}];
-  }
-
   let moving: Boolean = false;
   let capturedMouse: Boolean = false;
-  let x: number = 0;
-  let y: number = 0;
+  let translationX: number = 0;
+  let translationY: number = 0;
+
+  function addNew() {
+    let newData = storyInputData();
+    console.log(storyBlocks);
+    storyBlocks = [...storyBlocks, newData];
+  }
+
+  function storyInputData() {
+    return {
+      top: 300,
+      left: 300,
+      index: storyBlocks.length,
+    };
+  }
 
   const clamp = (num: number, min: number, max: number) =>
     Math.min(Math.max(num, min), max);
@@ -26,12 +33,12 @@
 
   function onMouseMove(e: MouseEvent) {
     if (moving) {
-      x += e.movementX / scale;
-      y += e.movementY / scale;
+      translationX += e.movementX / scale;
+      translationY += e.movementY / scale;
     }
   }
 
-  $: console.log(x, y);
+  // $: console.log(translationX, translationY);
 
   function onMouseUp() {
     moving = false;
@@ -39,7 +46,7 @@
 
   let scale: number = 1;
   function onMouseWheel(e: WheelEvent) {
-    // scale = clamp((scale + e.deltaY / 500), 0.5, 10);
+    // scale = clamp(scale + e.deltaY / 500, 0.5, 10);
   }
 
   function captureMouse() {
@@ -56,13 +63,15 @@
     <button class="btn btn-accent" on:click={addNew}>Press me</button>
   </div>
 
-  <div
-    id="canvas"
-    on:mousedown={onMouseDown}
-    style="--x: {x}; --y: {y}; --scale: {scale}"
-  >
+  <div id="canvas" on:mousedown={onMouseDown} style="--scale: {scale}">
     {#each storyBlocks as storyBlock}
+      <!-- {...storyBlock} -->
       <StoryInput
+        bind:top={storyBlock.top}
+        bind:left={storyBlock.left}
+        bind:index={storyBlock.index}
+        {translationX}
+        {translationY}
         on:captureMouse={captureMouse}
         on:releaseMouse={releaseMouse}
       />
@@ -73,7 +82,7 @@
 <svelte:window
   on:mouseup={onMouseUp}
   on:mousemove={onMouseMove}
-  on:mousewheel={onMouseWheel}
+  on:wheel={onMouseWheel}
 />
 
 <style>
@@ -87,8 +96,7 @@
     position: fixed;
     height: 100vh;
     width: 100vw;
-    transform: scale(calc(var(--scale) * 1))
-      translate(calc(var(--x) * 1px), calc(var(--y) * 1px));
+    transform: scale(calc(var(--scale) * 1));
     overflow: hidden;
   }
 

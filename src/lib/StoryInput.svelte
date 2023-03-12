@@ -1,17 +1,28 @@
 <script lang="ts">
   import ConnectionInput from "./ConnectionInput.svelte";
   import { createEventDispatcher } from "svelte";
+  import { activeInputId } from "../stores/activeStoryInput";
 
   export let connections = [{}];
-  export let top: number = 500;
-  export let left: number = 500;
+  export let top: number;
+  export let left: number;
+  export let index: number;
+  export let translationX: number;
+  export let translationY: number;
 
   let add: boolean = false;
+  let active: boolean = false;
   let mouseCaptured: boolean = false;
   let moving: boolean = false;
   let cursor: string = "default";
+  let headerColor: string = "#191d24";
+  let textColor: string = "white";
 
   const dispatch = createEventDispatcher();
+
+  activeInputId.subscribe((value) => {
+    active = value == index;
+  });
 
   function addNewConnection(e: MouseEvent) {
     //TODO add logic to add only if it doesn't have any content
@@ -21,7 +32,10 @@
   function onmousedown(e: MouseEvent) {
     if (!mouseCaptured) {
       moving = true;
-      dispatch("captureMouse", {});
+    }
+    dispatch("captureMouse", {});
+    if (!active) {
+      activeInputId.set(index);
     }
   }
 
@@ -46,13 +60,18 @@
   }
 
   $: cursor = moving ? "move" : "default";
+  $: headerColor = active ? "#36d399" : "#2a303c";
+  $: textColor = active ? "black" : "white";
 </script>
 
 <main
-  style="--top: {top}; --left: {left}; --cursor: {cursor}"
+  style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}"
   on:mousedown={onmousedown}
 >
-  <div id="storyHeader">
+  <div
+    id="storyHeader"
+    style="--headerColor: {headerColor}; --textColor: {textColor}"
+  >
     <p class="text-center">Story block</p>
   </div>
 
@@ -109,7 +128,10 @@
     position: absolute;
     top: calc(var(--top) * 1px);
     left: calc(var(--left) * 1px);
-    transform: translate(-50%, -50%);
+    transform: translate(
+      calc(var(--translateX) * 1px),
+      calc(var(--translateY) * 1px)
+    );
 
     width: 250px;
     height: auto;
@@ -141,7 +163,8 @@
   }
 
   #storyHeader {
-    background-color: #36d399;
+    background-color: var(--headerColor);
+    color: var(--textColor);
   }
 
   #storyBody {
