@@ -1,12 +1,20 @@
 <script lang="ts">
-  export let connection;
+  export let empty: boolean = true;
+  export let pathLabel: string;
+  export let pathDescription: string;
+
+  $: empty = pathLabel === "" && pathDescription === "";
 </script>
 
 <main class="mt-1">
   <div>
-    <input class="input" />
+    <input class="input" placeholder="Label" bind:value={pathLabel} />
     <vl />
-    <input class="input" />
+    <input
+      class="input"
+      placeholder="Description"
+      bind:value={pathDescription}
+    />
     <vl />
     <span class="dot" />
   </div>

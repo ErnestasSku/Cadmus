@@ -2,6 +2,7 @@
   import StoryInput from "./StoryInput.svelte";
 
   let storyBlocks = [];
+  let connections = [];
 
   let moving: Boolean = false;
   let capturedMouse: Boolean = false;
@@ -68,6 +69,7 @@
         bind:top={storyBlock.top}
         bind:left={storyBlock.left}
         bind:index={storyBlock.index}
+        bind:connections={storyBlock.connections}
         {translationX}
         {translationY}
         on:captureMouse={captureMouse}

@@ -3,7 +3,7 @@
   import { createEventDispatcher } from "svelte";
   import { activeInputId } from "../stores/activeStoryInput";
 
-  export let connections = [{}];
+  export let connections = [];
   export let top: number;
   export let left: number;
   export let index: number;
@@ -18,6 +18,7 @@
   let headerColor: string = "#191d24";
   let textColor: string = "white";
   let zIndex: number = 0;
+  let svgButtonRotation: string = "45deg";
 
   const dispatch = createEventDispatcher();
 
@@ -26,10 +27,26 @@
   $: textColor = active ? "black" : "white";
   $: zIndex = active ? 1 : 0;
   $: active = $activeInputId == index;
+  $: add = connections.find((element) => element.empty) == undefined;
+  $: svgButtonRotation = add ? "45deg" : "0deg";
 
   function addNewConnection(e: MouseEvent) {
-    //TODO add logic to add only if it doesn't have any content
-    connections = [...connections, {}];
+    let emptyIndex = connections.findIndex((element) => element.empty);
+    if (emptyIndex === -1) {
+      let newConnection = connectionData();
+      connections = [...connections, newConnection];
+    } else {
+      connections.splice(emptyIndex, 1);
+      connections = [...connections];
+    }
+  }
+
+  function connectionData() {
+    return {
+      empty: true,
+      pathLabel: "",
+      pathDescription: "",
+    };
   }
 
   function onmousedown(e: MouseEvent) {
@@ -64,7 +81,7 @@
 </script>
 
 <main
-  style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex}"
+  style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex};"
   on:mousedown={onmousedown}
 >
   <div
@@ -89,16 +106,29 @@
     />
     <hr class="line" />
 
+    <div
+      id="storyHeader"
+      class="mt-1 mb-2"
+      style="--headerColor: {headerColor}; --textColor: {textColor}"
+    >
+      <p class="text-center">Paths</p>
+    </div>
+
     <div on:mouseenter={captureMouse} on:mouseleave={releaseMouse}>
       {#each connections as connection}
-        <ConnectionInput {connection} />
+        <ConnectionInput
+          bind:empty={connection.empty}
+          bind:pathLabel={connection.pathLabel}
+          bind:pathDescription={connection.pathDescription}
+        />
       {/each}
     </div>
 
     <button
       on:click={addNewConnection}
       id="newConnection"
-      class="btn btn-circle btn-primary "
+      class="btn btn-circle btn-primary"
+      style="--rotation: {svgButtonRotation}"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -159,12 +189,13 @@
     top: 0%;
     left: 50%;
     position: relative;
-    transform: translate(-50%, 50%) !important;
+    transform: translate(-50%, 50%) rotate(var(--rotation)) !important;
   }
 
   #storyHeader {
     background-color: var(--headerColor);
     color: var(--textColor);
+    border-radius: 0 0 5px 5px;
   }
 
   #storyBody {
