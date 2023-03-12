@@ -2,8 +2,16 @@
   export let empty: boolean = true;
   export let pathLabel: string;
   export let pathDescription: string;
+  export let translationX: number;
+  export let translationY: number;
+
+  let dot;
 
   $: empty = pathLabel === "" && pathDescription === "";
+
+  function onDotMouseDown() {}
+  function onMouseMove() {}
+  function onMouseUp() {}
 </script>
 
 <main class="mt-1">
@@ -16,9 +24,11 @@
       bind:value={pathDescription}
     />
     <vl />
-    <span class="dot" />
+    <span class="dot" bind:this={dot} on:mousedown={onDotMouseDown} />
   </div>
 </main>
+
+<svelte:window on:mousemove={onMouseMove} on:mouseup={onMouseUp} />
 
 <style>
   div {

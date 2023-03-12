@@ -135,6 +135,8 @@
           bind:empty={connection.empty}
           bind:pathLabel={connection.pathLabel}
           bind:pathDescription={connection.pathDescription}
+          {translationX}
+          {translationY}
         />
       {/each}
     </div>
