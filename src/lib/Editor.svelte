@@ -62,7 +62,7 @@
 
 <main>
   <div id="top-section">
-    <button class="btn btn-accent" on:click={addNew}>Press me</button>
+    <button class="btn btn-accent" on:click={addNew}>Add new story</button>
   </div>
 
   <div id="canvas" on:mousedown={onMouseDown} style="--scale: {scale}">
