@@ -21,11 +21,10 @@
 
   const dispatch = createEventDispatcher();
 
-  //TODO: this is a memory leak. If the component is destroyed, this needs to be unsubscribed.
-  activeInputId.subscribe((value) => {
-    active = value == index;
-  });
-
+  $: cursor = moving ? "move" : "default";
+  $: headerColor = active ? "#36d399" : "#2a303c";
+  $: textColor = active ? "black" : "white";
+  $: zIndex = active ? 1 : 0;
   $: active = $activeInputId == index;
 
   function addNewConnection(e: MouseEvent) {
@@ -62,11 +61,6 @@
   function releaseMouse(e: MouseEvent) {
     mouseCaptured = false;
   }
-
-  $: cursor = moving ? "move" : "default";
-  $: headerColor = active ? "#36d399" : "#2a303c";
-  $: textColor = active ? "black" : "white";
-  $: zIndex = active ? 1 : 0;
 </script>
 
 <main

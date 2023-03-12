@@ -38,8 +38,6 @@
     }
   }
 
-  // $: console.log(translationX, translationY);
-
   function onMouseUp() {
     moving = false;
   }
@@ -103,10 +101,6 @@
   #top-section {
     background-color: black;
     width: 100vw;
-  }
-
-  button {
-    /* border: 1px solid white; */
   }
 
   #rect {
