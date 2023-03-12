@@ -19,7 +19,6 @@
 
   function openExisting() {
     let a = document.getElementsByTagName("html")[0];
-    console.log(a.classList);
     a.classList.remove("test");
   }
 </script>

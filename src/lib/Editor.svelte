@@ -18,7 +18,6 @@
   }
 
   function storyInputData() {
-    console.log("editor ", windowHeight, windowWidth);
     return {
       top: windowHeight / 2 - translationY,
       left: windowWidth / 2 - translationX,
