@@ -1,4 +1,5 @@
 <script lang="ts">
+  export let index: number;
   export let empty: boolean = true;
   export let pathLabel: string;
   export let pathDescription: string;

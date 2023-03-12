@@ -47,6 +47,7 @@
 
   function connectionData() {
     return {
+      index: connections.length,
       empty: true,
       pathLabel: "",
       pathDescription: "",
@@ -132,6 +133,7 @@
     <div on:mouseenter={captureMouse} on:mouseleave={releaseMouse}>
       {#each connections as connection}
         <ConnectionInput
+          index={connection.index}
           bind:empty={connection.empty}
           bind:pathLabel={connection.pathLabel}
           bind:pathDescription={connection.pathDescription}
