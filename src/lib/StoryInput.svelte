@@ -21,6 +21,7 @@
 
   const dispatch = createEventDispatcher();
 
+  //TODO: this is a memory leak. If the component is destroyed, this needs to be unsubscribed.
   activeInputId.subscribe((value) => {
     active = value == index;
   });
