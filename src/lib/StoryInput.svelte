@@ -2,6 +2,7 @@
   import ConnectionInput from "./ConnectionInput.svelte";
   import { createEventDispatcher } from "svelte";
   import { activeInputId } from "../stores/activeStoryInput";
+  import { onMount } from "svelte";
 
   export let connections = [];
   export let top: number;
@@ -19,6 +20,9 @@
   let textColor: string = "white";
   let zIndex: number = 0;
   let svgButtonRotation: string = "45deg";
+
+  let clientWidth: number;
+  let clientHeight: number;
 
   const dispatch = createEventDispatcher();
 
@@ -78,9 +82,20 @@
   function releaseMouse(e: MouseEvent) {
     mouseCaptured = false;
   }
+
+  onMount(() => {
+    adjustSize();
+  });
+
+  function adjustSize() {
+    top = top - clientHeight / 2;
+    left = left - clientWidth / 2;
+  }
 </script>
 
 <main
+  bind:clientHeight
+  bind:clientWidth
   style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex};"
   on:mousedown={onmousedown}
 >

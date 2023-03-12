@@ -9,16 +9,19 @@
   let translationX: number = 0;
   let translationY: number = 0;
 
+  let windowWidth: number;
+  let windowHeight: number;
+
   function addNew() {
     let newData = storyInputData();
-    console.log(storyBlocks);
     storyBlocks = [...storyBlocks, newData];
   }
 
   function storyInputData() {
+    console.log("editor ", windowHeight, windowWidth);
     return {
-      top: 300,
-      left: 300,
+      top: windowHeight / 2 - translationY,
+      left: windowWidth / 2 - translationX,
       index: storyBlocks.length,
     };
   }
@@ -80,6 +83,8 @@
 </main>
 
 <svelte:window
+  bind:innerHeight={windowHeight}
+  bind:innerWidth={windowWidth}
   on:mouseup={onMouseUp}
   on:mousemove={onMouseMove}
   on:wheel={onMouseWheel}
