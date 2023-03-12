@@ -17,6 +17,7 @@
   let cursor: string = "default";
   let headerColor: string = "#191d24";
   let textColor: string = "white";
+  let zIndex: number = 0;
 
   const dispatch = createEventDispatcher();
 
@@ -62,10 +63,11 @@
   $: cursor = moving ? "move" : "default";
   $: headerColor = active ? "#36d399" : "#2a303c";
   $: textColor = active ? "black" : "white";
+  $: zIndex = active ? 1 : 0;
 </script>
 
 <main
-  style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}"
+  style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex}"
   on:mousedown={onmousedown}
 >
   <div
@@ -132,6 +134,7 @@
       calc(var(--translateX) * 1px),
       calc(var(--translateY) * 1px)
     );
+    z-index: var(--zIndex);
 
     width: 250px;
     height: auto;
