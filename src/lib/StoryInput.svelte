@@ -26,6 +26,8 @@
     active = value == index;
   });
 
+  $: active = $activeInputId == index;
+
   function addNewConnection(e: MouseEvent) {
     //TODO add logic to add only if it doesn't have any content
     connections = [...connections, {}];
