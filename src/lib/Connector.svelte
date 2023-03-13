@@ -12,7 +12,7 @@
 
   <svg style="position: absolute;">
     <path
-      d="M {startY} {startX} {endY} {endX}"
+      d="M {startY} {startX} {endX} {endY}"
       stroke="red"
       stroke-width="2"
       fill="none"
@@ -21,11 +21,17 @@
 </main>
 
 <style>
-  main {
+  main,
+  svg,
+  path {
     position: absolute;
     user-select: none;
     pointer-events: none;
-    top: 0px;
-    left: 0px;
+    z-index: 5;
+  }
+
+  svg {
+    width: 100vw;
+    height: 100vh;
   }
 </style>

@@ -1,9 +1,9 @@
 <script lang="ts">
   import StoryInput from "./StoryInput.svelte";
+  import type { StoryBlock } from "src/typescript/interfaces";
+  import Connector from "./Connector.svelte";
 
-  let storyBlocks = [];
-  let connections = [];
-
+  let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
   let capturedMouse: Boolean = false;
   let translationX: number = 0;
@@ -21,6 +21,7 @@
     return {
       top: windowHeight / 2 - translationY,
       left: windowWidth / 2 - translationX,
+      connections: [],
       index: storyBlocks.length,
     };
   }
@@ -77,6 +78,17 @@
         on:captureMouse={captureMouse}
         on:releaseMouse={releaseMouse}
       />
+
+      {#each storyBlock.connections as connection}
+        <Connector
+          startX={connection.startX}
+          startY={connection.startY}
+          endX={connection.endX}
+          endY={connection.endY}
+          {translationX}
+          {translationY}
+        />
+      {/each}
     {/each}
   </div>
 </main>
@@ -117,5 +129,12 @@
     left: 50%;
     position: relative;
     transform: translate(-50%, -50%);
+  }
+
+  svg,
+  path {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
   }
 </style>

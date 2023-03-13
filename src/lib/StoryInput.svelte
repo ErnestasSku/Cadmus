@@ -3,8 +3,9 @@
   import { createEventDispatcher } from "svelte";
   import { activeInputId } from "../stores/activeStoryInput";
   import { onMount } from "svelte";
+  import type { Connection } from "src/typescript/interfaces";
 
-  export let connections = [];
+  export let connections: Connection[] = [];
   export let top: number;
   export let left: number;
   export let index: number;
@@ -38,6 +39,7 @@
     let emptyIndex = connections.findIndex((element) => element.empty);
     if (emptyIndex === -1) {
       let newConnection = connectionData();
+
       connections = [...connections, newConnection];
     } else {
       connections.splice(emptyIndex, 1);
@@ -51,6 +53,12 @@
       empty: true,
       pathLabel: "",
       pathDescription: "",
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0,
+      connected: false,
+      visible: true,
     };
   }
 
@@ -137,6 +145,10 @@
           bind:empty={connection.empty}
           bind:pathLabel={connection.pathLabel}
           bind:pathDescription={connection.pathDescription}
+          bind:startX={connection.startX}
+          bind:startY={connection.startY}
+          bind:endX={connection.endX}
+          bind:endY={connection.endY}
           {translationX}
           {translationY}
         />

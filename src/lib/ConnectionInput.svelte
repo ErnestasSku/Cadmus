@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { createEventDispatcher, onMount } from "svelte";
+  import Connector from "./Connector.svelte";
+
   export let index: number;
   export let empty: boolean = true;
   export let pathLabel: string;
@@ -6,13 +9,44 @@
   export let translationX: number;
   export let translationY: number;
 
+  export let startX = 0;
+  export let startY = 0;
+  export let endX = 0;
+  export let endY = 0;
+  // let translationX = 0;
+  // let translationY = 0;
+
   let dot;
+  let drawLine: boolean = false;
+  let connection;
+
+  const dispatch = createEventDispatcher();
 
   $: empty = pathLabel === "" && pathDescription === "";
 
-  function onDotMouseDown() {}
-  function onMouseMove() {}
-  function onMouseUp() {}
+  function onDotMouseDown() {
+    drawLine = true;
+
+    // dispatch("drawLineStarted", {
+    //   id: id,
+    // });
+  }
+  function onMouseMove(e: MouseEvent) {
+    if (drawLine) {
+      endX = e.clientX;
+      endY = e.clientY;
+    }
+  }
+  function onMouseUp() {
+    drawLine = false;
+  }
+
+  onMount(() => {
+    let rect = dot.getBoundingClientRect();
+
+    startX = rect.top;
+    startY = rect.left;
+  });
 </script>
 
 <main class="mt-1">
