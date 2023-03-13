@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "tauri": "tauri",
-    "lines": "Lines .svelte .rs --ignore target --ignore node_modules"
+    "lines": "Lines .svelte .rs .ts --ignore target --ignore node_modules"
   },
   "dependencies": {
     "@tauri-apps/api": "^1.2.0",
