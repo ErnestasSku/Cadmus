@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from "svelte";
-  import Connector from "./Connector.svelte";
+  import { onMount } from "svelte";
 
   export let index: number;
   export let empty: boolean = true;
@@ -8,28 +7,21 @@
   export let pathDescription: string;
   export let translationX: number;
   export let translationY: number;
-
   export let startX = 0;
   export let startY = 0;
   export let endX = 0;
   export let endY = 0;
-  // let translationX = 0;
-  // let translationY = 0;
 
-  let dot;
+  let dot: HTMLElement;
+  let dotSize: number = 25;
+  let dotSizeStyle: string = "25px";
   let drawLine: boolean = false;
-  let connection;
-
-  const dispatch = createEventDispatcher();
 
   $: empty = pathLabel === "" && pathDescription === "";
+  $: dotSizeStyle = dotSize.toString() + "px";
 
   function onDotMouseDown() {
     drawLine = true;
-
-    // dispatch("drawLineStarted", {
-    //   id: id,
-    // });
   }
   function onMouseMove(e: MouseEvent) {
     if (drawLine) {
@@ -44,8 +36,8 @@
   onMount(() => {
     let rect = dot.getBoundingClientRect();
 
-    startX = rect.top;
-    startY = rect.left;
+    startX = rect.left + dotSize / 2;
+    startY = rect.top + dotSize / 2;
   });
 </script>
 
@@ -59,7 +51,12 @@
       bind:value={pathDescription}
     />
     <vl />
-    <span class="dot" bind:this={dot} on:mousedown={onDotMouseDown} />
+    <span
+      class="dot"
+      bind:this={dot}
+      on:mousedown={onDotMouseDown}
+      style="--dotSize: {dotSizeStyle};"
+    />
   </div>
 </main>
 
@@ -86,8 +83,8 @@
   }
 
   .dot {
-    height: 25px;
-    width: 25px;
+    height: var(--dotSize);
+    width: var(--dotSize);
     background-color: #22d3ee;
     border-radius: 50%;
     margin-top: 0.5em;

@@ -2,6 +2,7 @@
   import StoryInput from "./StoryInput.svelte";
   import type { StoryBlock } from "src/typescript/interfaces";
   import Connector from "./Connector.svelte";
+  import { onMount } from "svelte";
 
   let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
@@ -11,6 +12,9 @@
 
   let windowWidth: number;
   let windowHeight: number;
+  let canvas: HTMLElement;
+  let canvasOffsetX: number;
+  let canvasOffsetY: number;
 
   function addNew() {
     let newData = storyInputData();
@@ -58,6 +62,12 @@
   function releaseMouse() {
     capturedMouse = false;
   }
+
+  onMount(() => {
+    canvasOffsetX = canvas.offsetLeft;
+    canvasOffsetY = canvas.offsetTop;
+    console.log(canvasOffsetX, canvasOffsetY);
+  });
 </script>
 
 <main>
@@ -65,7 +75,12 @@
     <button class="btn btn-accent" on:click={addNew}>Add new story</button>
   </div>
 
-  <div id="canvas" on:mousedown={onMouseDown} style="--scale: {scale}">
+  <div
+    id="canvas"
+    bind:this={canvas}
+    on:mousedown={onMouseDown}
+    style="--scale: {scale}"
+  >
     {#each storyBlocks as storyBlock}
       <!-- {...storyBlock} -->
       <StoryInput
@@ -87,6 +102,8 @@
           endY={connection.endY}
           {translationX}
           {translationY}
+          offsetX={canvasOffsetX}
+          offsetY={canvasOffsetY}
         />
       {/each}
     {/each}

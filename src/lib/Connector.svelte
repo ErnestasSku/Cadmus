@@ -5,6 +5,22 @@
   export let endY: number;
   export let translationX: number;
   export let translationY: number;
+  export let offsetX: number;
+  export let offsetY: number;
+
+  let calculatedStartX: number;
+  let calculatedStartY: number;
+  let calculatedEndX: number;
+  let calculatedEndY: number;
+
+  $: calculatedStartX = startX - offsetX;
+  $: calculatedStartY = startY - offsetY;
+  $: calculatedEndX = endX - offsetX;
+  $: calculatedEndY = endY - offsetY;
+
+  // TODO implement translation
+  $: console.log(translationX);
+  $: console.log(translationY);
 </script>
 
 <main>
@@ -12,7 +28,7 @@
 
   <svg style="position: absolute;">
     <path
-      d="M {startY} {startX} {endX} {endY}"
+      d="M {calculatedStartX} {calculatedStartY} {calculatedEndX} {calculatedEndY}"
       stroke="red"
       stroke-width="2"
       fill="none"
