@@ -87,7 +87,6 @@
     style="--scale: {scale}"
   >
     {#each storyBlocks as storyBlock}
-      <!-- {...storyBlock} -->
       <StoryInput
         bind:top={storyBlock.top}
         bind:left={storyBlock.left}
