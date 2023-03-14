@@ -1,7 +1,7 @@
 <script lang="ts">
   import ConnectionInput from "./ConnectionInput.svelte";
   import { createEventDispatcher } from "svelte";
-  import { activeInputId } from "../stores/activeStoryInput";
+  import { activeInputId, hoveredElement } from "../stores/activeStoryInput";
   import { onMount } from "svelte";
   import type { Connection } from "src/typescript/interfaces";
   import type { FoundLinkEvent } from "src/typescript/events";
@@ -16,6 +16,7 @@
   let StoryInput: HTMLElement;
   let add: boolean = false;
   let active: boolean = false;
+  let linkHovered: boolean = false;
   let mouseCaptured: boolean = false;
   let moving: boolean = false;
   let cursor: string = "default";
@@ -34,8 +35,11 @@
   $: textColor = active ? "black" : "white";
   $: zIndex = active ? 1 : 0;
   $: active = $activeInputId == index;
+  $: linkHovered = $hoveredElement === StoryInput;
   $: add = connections.find((element) => element.empty) == undefined;
   $: svgButtonRotation = add ? "45deg" : "0deg";
+
+  $: console.log(index, linkHovered);
 
   function addNewConnection(e: MouseEvent) {
     let emptyIndex = connections.findIndex((element) => element.empty);
@@ -89,6 +93,10 @@
   function onmouseup(e: MouseEvent) {
     moving = false;
     dispatch("releaseMouse", {});
+
+    if ($hoveredElement != null) {
+      hoveredElement.set(null);
+    }
   }
 
   function captureMouse(e: MouseEvent) {
@@ -99,10 +107,6 @@
     mouseCaptured = false;
   }
 
-  onMount(() => {
-    adjustSize();
-  });
-
   function adjustSize() {
     top = top - clientHeight / 2;
     left = left - clientWidth / 2;
@@ -110,13 +114,25 @@
 
   function handleLink(e: CustomEvent<FoundLinkEvent>) {
     let foundElement: HTMLElement = e.detail.target;
+    if (foundElement != StoryInput && foundElement != $hoveredElement) {
+      hoveredElement.set(foundElement);
+    }
   }
+
+  function handleLinkLost(e: CustomEvent) {
+    hoveredElement.set(null);
+  }
+
+  onMount(() => {
+    adjustSize();
+  });
 </script>
 
 <main
   bind:clientHeight
   bind:clientWidth
   class="story"
+  class:connecting={linkHovered}
   style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex};"
   on:mousedown={onmousedown}
   bind:this={StoryInput}
@@ -165,6 +181,7 @@
           {translationX}
           {translationY}
           on:link={handleLink}
+          on:linkLost={handleLinkLost}
         />
       {/each}
     </div>
@@ -245,5 +262,11 @@
 
   #storyBody {
     padding: 5px;
+  }
+
+  .connecting {
+    filter: brightness(50%);
+    border: 3px dashed white;
+    border-radius: 5px;
   }
 </style>

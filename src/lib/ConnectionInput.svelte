@@ -14,6 +14,7 @@
   export let endY = 0;
 
   let dot: HTMLElement;
+  let linkingElement: HTMLElement;
   let dotSize: number = 25;
   let dotSizeStyle: string = "25px";
   let drawLine: boolean = false;
@@ -26,19 +27,32 @@
   function onDotMouseDown() {
     drawLine = true;
   }
+
   function onMouseMove(e: MouseEvent) {
     if (drawLine) {
       endX = e.clientX - translationX;
       endY = e.clientY - translationY;
-      let temp = <Element>e.target;
-      let t = temp.closest(".story");
-      if (t != null) {
-        dispatch("link", {
-          target: t,
-        });
-      }
+
+      checkForLinks(e);
     }
   }
+
+  function checkForLinks(e: MouseEvent) {
+    let target = <Element>e.target;
+    let element = <HTMLElement>target.closest(".story");
+    if (element != null && element != linkingElement) {
+      linkingElement = element;
+      dispatch("link", {
+        target: element,
+      });
+    }
+
+    if (element == null && linkingElement != null) {
+      linkingElement = null;
+      dispatch("linkLost", {});
+    }
+  }
+
   function onMouseUp() {
     drawLine = false;
   }
