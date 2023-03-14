@@ -1,7 +1,7 @@
 <script lang="ts">
   import ConnectionInput from "./ConnectionInput.svelte";
   import { createEventDispatcher } from "svelte";
-  import { activeInputId, hoveredElement } from "../stores/activeStoryInput";
+  import { activeInputId, hoveredElement } from "../typescript/stores";
   import { onMount } from "svelte";
   import type { Connection } from "src/typescript/interfaces";
   import type { FoundLinkEvent } from "src/typescript/events";
