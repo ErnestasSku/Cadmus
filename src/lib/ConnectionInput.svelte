@@ -28,8 +28,8 @@
   }
   function onMouseMove(e: MouseEvent) {
     if (drawLine) {
-      endX = e.clientX;
-      endY = e.clientY;
+      endX = e.clientX - translationX;
+      endY = e.clientY - translationY;
       let temp = <Element>e.target;
       let t = temp.closest(".story");
       if (t != null) {
@@ -46,8 +46,8 @@
   onMount(() => {
     let rect = dot.getBoundingClientRect();
 
-    startX = rect.left + dotSize / 2;
-    startY = rect.top + dotSize / 2;
+    startX = rect.left + dotSize / 2 - translationX;
+    startY = rect.top + dotSize / 2 - translationY;
   });
 </script>
 
