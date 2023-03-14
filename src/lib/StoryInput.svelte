@@ -4,6 +4,7 @@
   import { activeInputId } from "../stores/activeStoryInput";
   import { onMount } from "svelte";
   import type { Connection } from "src/typescript/interfaces";
+  import type { FoundLinkEvent } from "src/typescript/events";
 
   export let connections: Connection[] = [];
   export let top: number;
@@ -12,6 +13,7 @@
   export let translationX: number;
   export let translationY: number;
 
+  let StoryInput: HTMLElement;
   let add: boolean = false;
   let active: boolean = false;
   let mouseCaptured: boolean = false;
@@ -100,13 +102,19 @@
     top = top - clientHeight / 2;
     left = left - clientWidth / 2;
   }
+
+  function handleLink(e: CustomEvent<FoundLinkEvent>) {
+    let foundElement: HTMLElement = e.detail.target;
+  }
 </script>
 
 <main
   bind:clientHeight
   bind:clientWidth
+  class="story"
   style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex};"
   on:mousedown={onmousedown}
+  bind:this={StoryInput}
 >
   <div
     id="storyHeader"
@@ -151,6 +159,7 @@
           bind:endY={connection.endY}
           {translationX}
           {translationY}
+          on:link={handleLink}
         />
       {/each}
     </div>

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
 
   export let index: number;
   export let empty: boolean = true;
@@ -17,6 +18,8 @@
   let dotSizeStyle: string = "25px";
   let drawLine: boolean = false;
 
+  const dispatch = createEventDispatcher();
+
   $: empty = pathLabel === "" && pathDescription === "";
   $: dotSizeStyle = dotSize.toString() + "px";
 
@@ -27,6 +30,14 @@
     if (drawLine) {
       endX = e.clientX;
       endY = e.clientY;
+      let temp = <Element>e.target;
+      let t = temp.closest(".story");
+      if (t != null) {
+        console.log(t);
+        dispatch("link", {
+          target: t,
+        });
+      }
     }
   }
   function onMouseUp() {
