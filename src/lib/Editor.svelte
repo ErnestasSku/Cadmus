@@ -63,16 +63,21 @@
     capturedMouse = false;
   }
 
+  function testButton() {
+    translationX = translationX == 25 ? 0 : 25;
+    translationY = translationY == 25 ? 0 : 25;
+  }
+
   onMount(() => {
     canvasOffsetX = canvas.offsetLeft;
     canvasOffsetY = canvas.offsetTop;
-    console.log(canvasOffsetX, canvasOffsetY);
   });
 </script>
 
 <main>
   <div id="top-section">
     <button class="btn btn-accent" on:click={addNew}>Add new story</button>
+    <button class="btn btn-secondary" on:click={testButton}>Test button</button>
   </div>
 
   <div

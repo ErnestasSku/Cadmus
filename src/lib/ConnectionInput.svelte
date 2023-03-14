@@ -33,7 +33,6 @@
       let temp = <Element>e.target;
       let t = temp.closest(".story");
       if (t != null) {
-        console.log(t);
         dispatch("link", {
           target: t,
         });

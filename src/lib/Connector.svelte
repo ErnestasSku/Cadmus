@@ -12,20 +12,20 @@
   let calculatedStartY: number;
   let calculatedEndX: number;
   let calculatedEndY: number;
+  let translationXStyle: string;
+  let translationYStyle: string;
 
   $: calculatedStartX = startX - offsetX;
   $: calculatedStartY = startY - offsetY;
   $: calculatedEndX = endX - offsetX;
   $: calculatedEndY = endY - offsetY;
-
-  // TODO implement translation
-  $: console.log(translationX);
-  $: console.log(translationY);
+  $: translationXStyle = translationX.toString() + "px";
+  $: translationYStyle = translationY.toString() + "px";
 </script>
 
-<main>
-  <!-- /todo -->
-
+<main
+  style="--translateX: {translationXStyle}; --translateY:{translationYStyle}"
+>
   <svg style="position: absolute;">
     <path
       d="M {calculatedStartX} {calculatedStartY} {calculatedEndX} {calculatedEndY}"
@@ -49,5 +49,7 @@
   svg {
     width: 100vw;
     height: 100vh;
+    /* transform: translate(); */
+    transform: translate(var(--translateX), var(--translateY));
   }
 </style>

@@ -78,6 +78,11 @@
     if (moving) {
       top += e.movementY;
       left += e.movementX;
+
+      for (let conn of connections) {
+        conn.startX += e.movementX;
+        conn.startY += e.movementY;
+      }
     }
   }
 
