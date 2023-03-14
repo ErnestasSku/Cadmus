@@ -49,6 +49,9 @@
   svg {
     width: 100vw;
     height: 100vh;
+  }
+
+  path {
     transform: translate(var(--translateX), var(--translateY));
   }
 </style>

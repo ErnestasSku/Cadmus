@@ -17,6 +17,7 @@
   let add: boolean = false;
   let active: boolean = false;
   let linkHovered: boolean = false;
+  let activeConnectionLine: number = null;
   let mouseCaptured: boolean = false;
   let moving: boolean = false;
   let cursor: string = "default";
@@ -38,8 +39,6 @@
   $: linkHovered = $hoveredElement === StoryInput;
   $: add = connections.find((element) => element.empty) == undefined;
   $: svgButtonRotation = add ? "45deg" : "0deg";
-
-  $: console.log(index, linkHovered);
 
   function addNewConnection(e: MouseEvent) {
     let emptyIndex = connections.findIndex((element) => element.empty);
@@ -94,8 +93,22 @@
     moving = false;
     dispatch("releaseMouse", {});
 
-    if ($hoveredElement != null) {
+    if ($hoveredElement != null && activeConnectionLine != null) {
+      let connectionIndex = connections.findIndex(
+        (eleme) => eleme.index == activeConnectionLine
+      );
+
+      console.log(connectionIndex, activeConnectionLine);
+      if (connectionIndex !== -1) {
+        connections[connectionIndex].endY =
+          $hoveredElement.getBoundingClientRect().top - translationY;
+        connections[connectionIndex].endX =
+          $hoveredElement.getBoundingClientRect().left - translationX;
+        connections[connectionIndex].connected = true;
+      }
+
       hoveredElement.set(null);
+      activeConnectionLine = null;
     }
   }
 
@@ -114,6 +127,8 @@
 
   function handleLink(e: CustomEvent<FoundLinkEvent>) {
     let foundElement: HTMLElement = e.detail.target;
+    activeConnectionLine = e.detail.link;
+
     if (foundElement != StoryInput && foundElement != $hoveredElement) {
       hoveredElement.set(foundElement);
     }
@@ -172,6 +187,7 @@
         <ConnectionInput
           index={connection.index}
           bind:empty={connection.empty}
+          bind:connected={connection.connected}
           bind:pathLabel={connection.pathLabel}
           bind:pathDescription={connection.pathDescription}
           bind:startX={connection.startX}

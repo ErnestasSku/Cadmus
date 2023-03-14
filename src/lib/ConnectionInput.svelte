@@ -3,6 +3,7 @@
   import { createEventDispatcher } from "svelte";
 
   export let index: number;
+  export let connected: boolean = false;
   export let empty: boolean = true;
   export let pathLabel: string;
   export let pathDescription: string;
@@ -21,7 +22,7 @@
 
   const dispatch = createEventDispatcher();
 
-  $: empty = pathLabel === "" && pathDescription === "";
+  $: empty = pathLabel === "" && pathDescription === "" && !connected;
   $: dotSizeStyle = dotSize.toString() + "px";
 
   function onDotMouseDown() {
@@ -44,6 +45,7 @@
       linkingElement = element;
       dispatch("link", {
         target: element,
+        link: index,
       });
     }
 
