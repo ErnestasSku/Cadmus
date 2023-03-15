@@ -7,6 +7,8 @@
   export let translationY: number;
   export let offsetX: number;
   export let offsetY: number;
+  export let index: number;
+  export let visible: boolean;
 
   let calculatedStartX: number;
   let calculatedStartY: number;
@@ -14,6 +16,7 @@
   let calculatedEndY: number;
   let translationXStyle: string;
   let translationYStyle: string;
+  let visibilityStyle: string;
 
   $: calculatedStartX = startX - offsetX;
   $: calculatedStartY = startY - offsetY;
@@ -21,10 +24,11 @@
   $: calculatedEndY = endY - offsetY;
   $: translationXStyle = translationX.toString() + "px";
   $: translationYStyle = translationY.toString() + "px";
+  $: visibilityStyle = visible ? "visible" : "hidden";
 </script>
 
 <main
-  style="--translateX: {translationXStyle}; --translateY:{translationYStyle}"
+  style="--translateX: {translationXStyle}; --translateY:{translationYStyle}; --visible: {visibilityStyle}"
 >
   <svg style="position: absolute;">
     <path
@@ -53,5 +57,6 @@
 
   path {
     transform: translate(var(--translateX), var(--translateY));
+    visibility: var(--visible);
   }
 </style>

@@ -13,6 +13,7 @@
   export let startY = 0;
   export let endX = 0;
   export let endY = 0;
+  export let visible: boolean = false;
 
   let dot: HTMLElement;
   let linkingElement: HTMLElement;
@@ -24,6 +25,7 @@
 
   $: empty = pathLabel === "" && pathDescription === "" && !connected;
   $: dotSizeStyle = dotSize.toString() + "px";
+  $: visible = drawLine || connected;
 
   function onDotMouseDown() {
     drawLine = true;

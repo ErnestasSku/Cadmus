@@ -72,7 +72,7 @@
       endX: 0,
       endY: 0,
       connected: false,
-      visible: true,
+      visible: false,
     };
   }
 
@@ -214,6 +214,7 @@
           bind:startY={connection.startY}
           bind:endX={connection.endX}
           bind:endY={connection.endY}
+          bind:visible={connection.visible}
           {translationX}
           {translationY}
           on:link={handleLink}
