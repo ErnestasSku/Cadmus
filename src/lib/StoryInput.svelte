@@ -113,8 +113,11 @@
         (eleme) => eleme.index == activeConnectionLine
       );
 
-      console.log($hoveredElementId);
-      if (connectionIndex !== -1) {
+      let canConnect = connections.every(
+        (elem) => elem.connectedElementId != $hoveredElementId
+      );
+
+      if (connectionIndex !== -1 && canConnect) {
         connections[connectionIndex].endY =
           $hoveredElement.getBoundingClientRect().top - translationY;
         connections[connectionIndex].endX =

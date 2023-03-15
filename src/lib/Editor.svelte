@@ -74,8 +74,6 @@
     let changedLeft = e.detail.left;
     let changedTop = e.detail.top;
 
-    console.log(changedLeft, changedTop);
-
     for (let story of storyBlocks) {
       for (let connection of story.connections) {
         if (connection.connectedElementId == changedElement) {
