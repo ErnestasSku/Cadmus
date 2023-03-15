@@ -1,18 +1,27 @@
 <script lang="ts">
   import ConnectionInput from "./ConnectionInput.svelte";
   import { createEventDispatcher } from "svelte";
-  import { activeInputId } from "../stores/activeStoryInput";
+  import {
+    activeInputId,
+    hoveredElement,
+    hoveredElementId,
+  } from "../typescript/stores";
   import { onMount } from "svelte";
+  import type { Connection } from "src/typescript/interfaces";
+  import type { FoundLinkEvent } from "src/typescript/events";
 
-  export let connections = [];
+  export let connections: Connection[] = [];
   export let top: number;
   export let left: number;
   export let index: number;
   export let translationX: number;
   export let translationY: number;
 
+  let StoryInput: HTMLElement;
   let add: boolean = false;
   let active: boolean = false;
+  let linkHovered: boolean = false;
+  let activeConnectionLine: number = null;
   let mouseCaptured: boolean = false;
   let moving: boolean = false;
   let cursor: string = "default";
@@ -20,7 +29,6 @@
   let textColor: string = "white";
   let zIndex: number = 0;
   let svgButtonRotation: string = "45deg";
-
   let clientWidth: number;
   let clientHeight: number;
 
@@ -31,13 +39,20 @@
   $: textColor = active ? "black" : "white";
   $: zIndex = active ? 1 : 0;
   $: active = $activeInputId == index;
+  $: linkHovered = $hoveredElement === StoryInput;
+  $: if (linkHovered) {
+    hoveredElementId.set(index);
+  }
   $: add = connections.find((element) => element.empty) == undefined;
   $: svgButtonRotation = add ? "45deg" : "0deg";
+  // $: connections.forEach((elem) => (elem.startX = left));
+  // $: connections.forEach((elem) => (elem.startY = top));
 
   function addNewConnection(e: MouseEvent) {
     let emptyIndex = connections.findIndex((element) => element.empty);
     if (emptyIndex === -1) {
       let newConnection = connectionData();
+
       connections = [...connections, newConnection];
     } else {
       connections.splice(emptyIndex, 1);
@@ -45,11 +60,19 @@
     }
   }
 
-  function connectionData() {
+  function connectionData(): Connection {
     return {
+      index: connections.length,
+      connectedElementId: -1,
       empty: true,
       pathLabel: "",
       pathDescription: "",
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0,
+      connected: false,
+      visible: false,
     };
   }
 
@@ -67,12 +90,46 @@
     if (moving) {
       top += e.movementY;
       left += e.movementX;
+
+      for (let conn of connections) {
+        conn.startX += e.movementX;
+        conn.startY += e.movementY;
+      }
+
+      dispatch("updatedConnectionLines", {
+        storyElementId: index,
+        top: top,
+        left: left,
+      });
     }
   }
 
   function onmouseup(e: MouseEvent) {
     moving = false;
     dispatch("releaseMouse", {});
+
+    if ($hoveredElement != null && activeConnectionLine != null) {
+      let connectionIndex = connections.findIndex(
+        (eleme) => eleme.index == activeConnectionLine
+      );
+
+      let canConnect = connections.every(
+        (elem) => elem.connectedElementId != $hoveredElementId
+      );
+
+      if (connectionIndex !== -1 && canConnect) {
+        connections[connectionIndex].endY =
+          $hoveredElement.getBoundingClientRect().top - translationY;
+        connections[connectionIndex].endX =
+          $hoveredElement.getBoundingClientRect().left - translationX;
+        connections[connectionIndex].connected = true;
+        connections[connectionIndex].connectedElementId = $hoveredElementId;
+      }
+
+      hoveredElement.set(null);
+      hoveredElementId.set(null);
+      activeConnectionLine = null;
+    }
   }
 
   function captureMouse(e: MouseEvent) {
@@ -83,21 +140,39 @@
     mouseCaptured = false;
   }
 
-  onMount(() => {
-    adjustSize();
-  });
-
   function adjustSize() {
     top = top - clientHeight / 2;
     left = left - clientWidth / 2;
   }
+
+  function handleLink(e: CustomEvent<FoundLinkEvent>) {
+    let foundElement: HTMLElement = e.detail.target;
+    activeConnectionLine = e.detail.link;
+    connections[activeConnectionLine].connectedElementId = -1;
+
+    if (foundElement != StoryInput && foundElement != $hoveredElement) {
+      hoveredElement.set(foundElement);
+    }
+  }
+
+  function handleLinkLost(e: CustomEvent) {
+    hoveredElement.set(null);
+    activeConnectionLine = null;
+  }
+
+  onMount(() => {
+    adjustSize();
+  });
 </script>
 
 <main
   bind:clientHeight
   bind:clientWidth
+  class="story"
+  class:connecting={linkHovered}
   style="--top: {top}; --left: {left}; --cursor: {cursor}; --translateX: {translationX}; --translateY: {translationY}; --zIndex: {zIndex};"
   on:mousedown={onmousedown}
+  bind:this={StoryInput}
 >
   <div
     id="storyHeader"
@@ -132,11 +207,20 @@
     <div on:mouseenter={captureMouse} on:mouseleave={releaseMouse}>
       {#each connections as connection}
         <ConnectionInput
+          index={connection.index}
           bind:empty={connection.empty}
+          bind:connected={connection.connected}
           bind:pathLabel={connection.pathLabel}
           bind:pathDescription={connection.pathDescription}
+          bind:startX={connection.startX}
+          bind:startY={connection.startY}
+          bind:endX={connection.endX}
+          bind:endY={connection.endY}
+          bind:visible={connection.visible}
           {translationX}
           {translationY}
+          on:link={handleLink}
+          on:linkLost={handleLinkLost}
         />
       {/each}
     </div>
@@ -217,5 +301,11 @@
 
   #storyBody {
     padding: 5px;
+  }
+
+  .connecting {
+    filter: brightness(50%);
+    border: 3px dashed white;
+    border-radius: 5px;
   }
 </style>

@@ -1,17 +1,76 @@
 <script lang="ts">
+  import { onMount } from "svelte";
+  import { createEventDispatcher } from "svelte";
+
+  export let index: number;
+  export let connected: boolean = false;
   export let empty: boolean = true;
   export let pathLabel: string;
   export let pathDescription: string;
   export let translationX: number;
   export let translationY: number;
+  export let startX = 0;
+  export let startY = 0;
+  export let endX = 0;
+  export let endY = 0;
+  export let visible: boolean = false;
 
-  let dot;
+  let dot: HTMLElement;
+  let linkingElement: HTMLElement;
+  let dotSize: number = 25;
+  let dotSizeStyle: string = "25px";
+  let drawLine: boolean = false;
 
-  $: empty = pathLabel === "" && pathDescription === "";
+  const dispatch = createEventDispatcher();
 
-  function onDotMouseDown() {}
-  function onMouseMove() {}
-  function onMouseUp() {}
+  $: empty = pathLabel === "" && pathDescription === "" && !connected;
+  $: dotSizeStyle = dotSize.toString() + "px";
+  $: visible = drawLine || connected;
+
+  function onDotMouseDown(e: MouseEvent) {
+    drawLine = true;
+    connected = false;
+
+    endX = e.clientX - translationX;
+    endY = e.clientY - translationY;
+  }
+
+  function onMouseMove(e: MouseEvent) {
+    if (drawLine) {
+      endX = e.clientX - translationX;
+      endY = e.clientY - translationY;
+
+      checkForLinks(e);
+    }
+  }
+
+  function checkForLinks(e: MouseEvent) {
+    let target = <Element>e.target;
+    let element = <HTMLElement>target.closest(".story");
+    if (element != null && element != linkingElement) {
+      linkingElement = element;
+      dispatch("link", {
+        target: element,
+        link: index,
+      });
+    }
+
+    if (element == null && linkingElement != null) {
+      linkingElement = null;
+      dispatch("linkLost", {});
+    }
+  }
+
+  function onMouseUp() {
+    drawLine = false;
+  }
+
+  onMount(() => {
+    let rect = dot.getBoundingClientRect();
+
+    startX = rect.left + dotSize / 2 - translationX;
+    startY = rect.top + dotSize / 2 - translationY;
+  });
 </script>
 
 <main class="mt-1">
@@ -24,7 +83,12 @@
       bind:value={pathDescription}
     />
     <vl />
-    <span class="dot" bind:this={dot} on:mousedown={onDotMouseDown} />
+    <span
+      class="dot"
+      bind:this={dot}
+      on:mousedown={onDotMouseDown}
+      style="--dotSize: {dotSizeStyle};"
+    />
   </div>
 </main>
 
@@ -51,8 +115,8 @@
   }
 
   .dot {
-    height: 25px;
-    width: 25px;
+    height: var(--dotSize);
+    width: var(--dotSize);
     background-color: #22d3ee;
     border-radius: 50%;
     margin-top: 0.5em;
