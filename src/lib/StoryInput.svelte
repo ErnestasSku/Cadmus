@@ -1,7 +1,11 @@
 <script lang="ts">
   import ConnectionInput from "./ConnectionInput.svelte";
   import { createEventDispatcher } from "svelte";
-  import { activeInputId, hoveredElement } from "../typescript/stores";
+  import {
+    activeInputId,
+    hoveredElement,
+    hoveredElementId,
+  } from "../typescript/stores";
   import { onMount } from "svelte";
   import type { Connection } from "src/typescript/interfaces";
   import type { FoundLinkEvent } from "src/typescript/events";
@@ -25,7 +29,6 @@
   let textColor: string = "white";
   let zIndex: number = 0;
   let svgButtonRotation: string = "45deg";
-
   let clientWidth: number;
   let clientHeight: number;
 
@@ -37,8 +40,13 @@
   $: zIndex = active ? 1 : 0;
   $: active = $activeInputId == index;
   $: linkHovered = $hoveredElement === StoryInput;
+  $: if (linkHovered) {
+    hoveredElementId.set(index);
+  }
   $: add = connections.find((element) => element.empty) == undefined;
   $: svgButtonRotation = add ? "45deg" : "0deg";
+  // $: connections.forEach((elem) => (elem.startX = left));
+  // $: connections.forEach((elem) => (elem.startY = top));
 
   function addNewConnection(e: MouseEvent) {
     let emptyIndex = connections.findIndex((element) => element.empty);
@@ -52,9 +60,10 @@
     }
   }
 
-  function connectionData() {
+  function connectionData(): Connection {
     return {
       index: connections.length,
+      connectedElementId: -1,
       empty: true,
       pathLabel: "",
       pathDescription: "",
@@ -86,6 +95,12 @@
         conn.startX += e.movementX;
         conn.startY += e.movementY;
       }
+
+      dispatch("updatedConnectionLines", {
+        storyElementId: index,
+        top: top,
+        left: left,
+      });
     }
   }
 
@@ -98,16 +113,18 @@
         (eleme) => eleme.index == activeConnectionLine
       );
 
-      console.log(connectionIndex, activeConnectionLine);
+      console.log($hoveredElementId);
       if (connectionIndex !== -1) {
         connections[connectionIndex].endY =
           $hoveredElement.getBoundingClientRect().top - translationY;
         connections[connectionIndex].endX =
           $hoveredElement.getBoundingClientRect().left - translationX;
         connections[connectionIndex].connected = true;
+        connections[connectionIndex].connectedElementId = $hoveredElementId;
       }
 
       hoveredElement.set(null);
+      hoveredElementId.set(null);
       activeConnectionLine = null;
     }
   }

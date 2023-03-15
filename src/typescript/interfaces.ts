@@ -7,6 +7,7 @@ export interface StoryBlock {
 
 export interface Connection {
   index: number;
+  connectedElementId: number;
   pathLabel: string;
   pathDescription: string;
   startX: number;

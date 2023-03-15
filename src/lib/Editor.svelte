@@ -3,6 +3,7 @@
   import type { StoryBlock } from "src/typescript/interfaces";
   import Connector from "./Connector.svelte";
   import { onMount } from "svelte";
+  import type { UpdateConnectionLinesEvent } from "src/typescript/events";
 
   let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
@@ -68,6 +69,25 @@
     translationY = translationY == 25 ? 0 : 25;
   }
 
+  function updatedConnectionLines(e: CustomEvent<UpdateConnectionLinesEvent>) {
+    let changedElement = e.detail.storyElementId;
+    let changedLeft = e.detail.left;
+    let changedTop = e.detail.top;
+
+    console.log(changedLeft, changedTop);
+
+    for (let story of storyBlocks) {
+      for (let connection of story.connections) {
+        if (connection.connectedElementId == changedElement) {
+          // When using top and left from Editor and Connector itself, the values differ based on offset.
+          // Values from connector do not have offset value
+          connection.endX = changedLeft + canvasOffsetX;
+          connection.endY = changedTop + canvasOffsetY;
+        }
+      }
+    }
+  }
+
   onMount(() => {
     canvasOffsetX = canvas.offsetLeft;
     canvasOffsetY = canvas.offsetTop;
@@ -96,6 +116,7 @@
         {translationY}
         on:captureMouse={captureMouse}
         on:releaseMouse={releaseMouse}
+        on:updatedConnectionLines={updatedConnectionLines}
       />
 
       {#each storyBlock.connections as connection}
