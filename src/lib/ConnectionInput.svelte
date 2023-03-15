@@ -27,8 +27,10 @@
   $: dotSizeStyle = dotSize.toString() + "px";
   $: visible = drawLine || connected;
 
-  function onDotMouseDown() {
+  function onDotMouseDown(e: MouseEvent) {
     drawLine = true;
+    endX = e.clientX - translationX;
+    endY = e.clientY - translationY;
   }
 
   function onMouseMove(e: MouseEvent) {

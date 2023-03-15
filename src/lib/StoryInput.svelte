@@ -156,6 +156,7 @@
 
   function handleLinkLost(e: CustomEvent) {
     hoveredElement.set(null);
+    activeConnectionLine = null;
   }
 
   onMount(() => {
