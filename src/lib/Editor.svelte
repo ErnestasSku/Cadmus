@@ -123,7 +123,6 @@
           startY={connection.startY}
           endX={connection.endX}
           endY={connection.endY}
-          index={connection.index}
           visible={connection.visible}
           {translationX}
           {translationY}

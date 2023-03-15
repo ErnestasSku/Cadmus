@@ -7,7 +7,6 @@
   export let translationY: number;
   export let offsetX: number;
   export let offsetY: number;
-  export let index: number;
   export let visible: boolean;
 
   let calculatedStartX: number;
