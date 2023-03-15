@@ -29,6 +29,8 @@
 
   function onDotMouseDown(e: MouseEvent) {
     drawLine = true;
+    connected = false;
+
     endX = e.clientX - translationX;
     endY = e.clientY - translationY;
   }

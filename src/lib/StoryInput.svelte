@@ -148,6 +148,7 @@
   function handleLink(e: CustomEvent<FoundLinkEvent>) {
     let foundElement: HTMLElement = e.detail.target;
     activeConnectionLine = e.detail.link;
+    connections[activeConnectionLine].connectedElementId = -1;
 
     if (foundElement != StoryInput && foundElement != $hoveredElement) {
       hoveredElement.set(foundElement);
