@@ -24,6 +24,35 @@
   $: translationXStyle = translationX.toString() + "px";
   $: translationYStyle = translationY.toString() + "px";
   $: visibilityStyle = visible ? "visible" : "hidden";
+
+  let curve;
+
+  $: {
+    //TODO. Initial implementation of curved connection line
+    //Subject to change in the future
+    let mx = (endX + startX) * 0.5;
+    let my = (endY + startY) * 0.5;
+    let theta = Math.atan2(endY - startY, endX - startX) - Math.PI / 2;
+    let offset = 100;
+
+    // location of control point:
+    let c1x = mx - offset * Math.cos(theta);
+    let c1y = my - offset * Math.sin(theta);
+
+    curve =
+      "M" +
+      startX +
+      " " +
+      (startY - offsetY) +
+      " Q " +
+      c1x +
+      " " +
+      c1y +
+      " " +
+      endX +
+      " " +
+      (endY - offsetY);
+  }
 </script>
 
 <main
@@ -32,10 +61,10 @@
   <svg style="position: absolute;">
     <path
       d="M {calculatedStartX} {calculatedStartY} {calculatedEndX} {calculatedEndY}"
-      stroke="red"
-      stroke-width="2"
-      fill="none"
+      stroke="#22D3EE"
+      stroke-width="3"
     />
+    <!-- <path d={curve} stroke="red" stroke-width="2" fill="none" /> -->
   </svg>
 </main>
 
@@ -46,7 +75,7 @@
     position: absolute;
     user-select: none;
     pointer-events: none;
-    z-index: 5;
+    z-index: -1;
   }
 
   svg {
