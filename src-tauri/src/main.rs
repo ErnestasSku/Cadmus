@@ -5,6 +5,7 @@
 
 mod app;
 mod dto;
+mod file_utils;
 mod state;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -15,7 +16,12 @@ fn greet(name: &str) -> String {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet, app::tauri::save_file])
+        .manage(state::AppStateHandle::default())
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            app::tauri::save_file,
+            app::tauri::update_path
+        ])
         .setup(move |_app| {
             // let a = app.path_resolver().app_data_dir();
             // app.path_resolver().l

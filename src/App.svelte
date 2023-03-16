@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { invoke } from "@tauri-apps/api/tauri";
   import Editor from "./lib/Editor/Editor.svelte";
   import Welcome from "./lib/Startup/Welcome.svelte";
 
@@ -6,8 +7,8 @@
 
   function handleOpenWorkspace(e: CustomEvent) {
     startupScreen = false;
-    //TODO
-    console.log(e);
+    console.log(JSON.stringify(e.detail));
+    invoke("update_path", { newPath: e.detail.path });
   }
 </script>
 

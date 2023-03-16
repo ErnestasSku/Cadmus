@@ -34,3 +34,11 @@ pub type AppStateHandle = Handle<AppState>;
 pub struct AppState {
     pub workspace_path: Option<String>,
 }
+
+impl Default for AppState {
+    fn default() -> Self {
+        Self {
+            workspace_path: None,
+        }
+    }
+}
