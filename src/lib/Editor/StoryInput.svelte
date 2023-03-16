@@ -5,7 +5,7 @@
     activeInputId,
     hoveredElement,
     hoveredElementId,
-  } from "../typescript/stores";
+  } from "../../typescript/stores";
   import { onMount } from "svelte";
   import type { Connection } from "src/typescript/interfaces";
   import type { FoundLinkEvent } from "src/typescript/events";
