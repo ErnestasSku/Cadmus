@@ -4,6 +4,11 @@
   import Connector from "./Connector.svelte";
   import { onMount } from "svelte";
   import type { UpdateConnectionLinesEvent } from "src/typescript/events";
+  import { invoke } from "@tauri-apps/api/tauri";
+  import {
+    open as openFileDialog,
+    save as saveFileDialog,
+  } from "@tauri-apps/api/dialog";
 
   let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
@@ -64,9 +69,16 @@
     capturedMouse = false;
   }
 
-  function testButton() {
-    translationX = translationX == 25 ? 0 : 25;
-    translationY = translationY == 25 ? 0 : 25;
+  async function testButton() {
+    // translationX = translationX == 25 ? 0 : 25;
+    // translationY = translationY == 25 ? 0 : 25;
+    invoke("save_file", { storyBlocks: storyBlocks }).then((data: string) => {
+      console.log(data);
+      console.log(JSON.parse(data));
+    });
+
+    // const a = await saveFileDialog();
+    // console.log(a);
   }
 
   function updatedConnectionLines(e: CustomEvent<UpdateConnectionLinesEvent>) {

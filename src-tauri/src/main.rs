@@ -3,7 +3,9 @@
     windows_subsystem = "windows"
 )]
 
-use tauri::{Menu, MenuEntry, MenuItem, Submenu};
+mod app;
+mod dto;
+mod state;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -13,7 +15,13 @@ fn greet(name: &str) -> String {
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![greet, app::tauri::save_file])
+        .setup(move |_app| {
+            // let a = app.path_resolver().app_data_dir();
+            // app.path_resolver().l
+
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
