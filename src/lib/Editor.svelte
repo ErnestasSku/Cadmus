@@ -4,6 +4,7 @@
   import Connector from "./Connector.svelte";
   import { onMount } from "svelte";
   import type { UpdateConnectionLinesEvent } from "src/typescript/events";
+  import { invoke } from "@tauri-apps/api/tauri";
 
   let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
@@ -65,8 +66,11 @@
   }
 
   function testButton() {
-    translationX = translationX == 25 ? 0 : 25;
-    translationY = translationY == 25 ? 0 : 25;
+    // translationX = translationX == 25 ? 0 : 25;
+    // translationY = translationY == 25 ? 0 : 25;
+    invoke("save_file", { storyBlocks: storyBlocks }).then(
+      (data: string) => (storyBlocks = <[StoryBlock]>JSON.parse(data))
+    );
   }
 
   function updatedConnectionLines(e: CustomEvent<UpdateConnectionLinesEvent>) {
