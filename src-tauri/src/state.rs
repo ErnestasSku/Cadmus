@@ -31,6 +31,6 @@ pub type AppStateHandle = Handle<AppState>;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-struct AppState {
-    workspace_path: String,
+pub struct AppState {
+    pub workspace_path: Option<String>,
 }

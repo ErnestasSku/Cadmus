@@ -72,12 +72,13 @@
   async function testButton() {
     // translationX = translationX == 25 ? 0 : 25;
     // translationY = translationY == 25 ? 0 : 25;
-    // invoke("save_file", { storyBlocks: storyBlocks }).then(
-    // (data: string) => (storyBlocks = <[StoryBlock]>JSON.parse(data))
-    // );
+    invoke("save_file", { storyBlocks: storyBlocks }).then((data: string) => {
+      console.log(data);
+      console.log(JSON.parse(data));
+    });
 
-    const a = await saveFileDialog();
-    console.log(a);
+    // const a = await saveFileDialog();
+    // console.log(a);
   }
 
   function updatedConnectionLines(e: CustomEvent<UpdateConnectionLinesEvent>) {
