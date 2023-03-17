@@ -6,6 +6,7 @@
 mod app;
 mod dto;
 mod file_utils;
+mod handle;
 mod state;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
