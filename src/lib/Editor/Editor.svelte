@@ -4,7 +4,7 @@
   import Connector from "./Connector.svelte";
   import { onMount } from "svelte";
   import type { UpdateConnectionLinesEvent } from "src/typescript/events";
-  import { saveFile } from "src/typescript/wrapper";
+  import { saveFile } from "../../typescript/wrapper";
 
   let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
@@ -18,12 +18,12 @@
   let canvasOffsetX: number;
   let canvasOffsetY: number;
 
-  function addNew() {
+  function addNew(): void {
     let newData = storyInputData();
     storyBlocks = [...storyBlocks, newData];
   }
 
-  function storyInputData() {
+  function storyInputData(): StoryBlock {
     return {
       top: windowHeight / 2 - translationY,
       left: windowWidth / 2 - translationX,
@@ -35,20 +35,20 @@
   const clamp = (num: number, min: number, max: number) =>
     Math.min(Math.max(num, min), max);
 
-  function onMouseDown() {
+  function onMouseDown(): void {
     if (!capturedMouse) {
       moving = true;
     }
   }
 
-  function onMouseMove(e: MouseEvent) {
+  function onMouseMove(e: MouseEvent): void {
     if (moving) {
       translationX += e.movementX / scale;
       translationY += e.movementY / scale;
     }
   }
 
-  function onMouseUp() {
+  function onMouseUp(): void {
     moving = false;
   }
 
@@ -57,24 +57,21 @@
     // scale = clamp(scale + e.deltaY / 500, 0.5, 10);
   }
 
-  function captureMouse() {
+  function captureMouse(): void {
     capturedMouse = true;
   }
 
-  function releaseMouse() {
+  function releaseMouse(): void {
     capturedMouse = false;
   }
 
   async function testButton() {
-    // translationX = translationX == 25 ? 0 : 25;
-    // translationY = translationY == 25 ? 0 : 25;
     await saveFile(storyBlocks);
-
-    // const a = await saveFileDialog();
-    // console.log(a);
   }
 
-  function updatedConnectionLines(e: CustomEvent<UpdateConnectionLinesEvent>) {
+  function updatedConnectionLines(
+    e: CustomEvent<UpdateConnectionLinesEvent>
+  ): void {
     let changedElement = e.detail.storyElementId;
     let changedLeft = e.detail.left;
     let changedTop = e.detail.top;

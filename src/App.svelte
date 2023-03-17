@@ -9,7 +9,9 @@
 
   $: startupScreen = currentPath == null;
 
-  async function handleOpenWorkspace(e: CustomEvent<OpenWorkspaceEvent>) {
+  async function handleOpenWorkspace(
+    e: CustomEvent<OpenWorkspaceEvent>
+  ): Promise<void> {
     currentPath = e.detail.path;
     await updatePath(e.detail);
   }

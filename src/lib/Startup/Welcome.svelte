@@ -14,7 +14,7 @@
 
   const dispatch = createEventDispatcher();
 
-  async function newStory() {
+  async function newStory(): Promise<void> {
     const path = await saveFileDialog({
       filters: [{ extensions: ["cadmus"], name: "Story File" }],
     });
@@ -24,7 +24,7 @@
     }
   }
 
-  async function openExisting() {
+  async function openExisting(): Promise<void> {
     const path = await openFileDialog({
       filters: [{ extensions: ["cadmus"], name: "Story file" }],
     });

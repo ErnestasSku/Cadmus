@@ -2,7 +2,7 @@
   // import { fade } from "svelte/types/runtime/transition";
   // import { flip } from 'svelte/animate';
   import { fade } from "svelte/transition";
-  import Waves from "./lib/Editor/Waves.svelte";
+  // import Waves from "./lib/Editor/Waves.svelte";
 
   let clientHeight;
   let innerHeight;
@@ -36,7 +36,7 @@
       >Open existing story</button
     >
 
-    <Waves />
+    <!-- <Waves /> -->
   </div>
 </main>
 
