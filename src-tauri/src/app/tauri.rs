@@ -2,7 +2,6 @@ use serde::Serialize;
 
 use crate::{dto::StoryBlock, file_utils, state::AppStateHandle};
 use tauri::State;
-// use crate::file::files;
 
 use crate::state::AppState;
 
@@ -11,20 +10,29 @@ pub async fn save_file(
     story_blocks: Vec<StoryBlock>,
     state: State<'_, AppStateHandle>,
 ) -> Result<(), String> {
-    let ct = state.lock();
-    if let Some(path) = &ct.workspace_path {
+    let st = state.lock();
+    if let Some(path) = &st.workspace_path {
         file_utils::files::write_cadmus_file(path.to_string(), story_blocks);
     }
 
     Ok(())
 }
 
-// #[tauri::command]
-// pub async fn save_file() -> Result<String, String> {
-//     println!("{:?}", story_blocks);
+#[tauri::command]
+pub async fn synchronize_story_data(
+    data: Vec<StoryBlock>,
+    state: State<'_, AppStateHandle>,
+) -> Result<(), String> {
+    let mut st = state.lock();
+    st.story_data = data;
+    Ok(())
+}
 
-//     Ok(serde_json::to_string(&a).unwrap())
-// }
+#[tauri::command]
+pub async fn fetch_story_data(state: State<'_, AppStateHandle>) -> Result<String, String> {
+    let st = state.lock();
+    Ok(serde_json::to_string(&st.story_data).unwrap())
+}
 
 #[tauri::command]
 pub async fn update_path(new_path: String, state: State<'_, AppStateHandle>) -> Result<(), String> {
