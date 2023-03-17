@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { invoke } from "@tauri-apps/api/tauri";
   import Editor from "./lib/Editor/Editor.svelte";
   import Welcome from "./lib/Startup/Welcome.svelte";
   import type { OpenWorkspaceEvent } from "./typescript/events";

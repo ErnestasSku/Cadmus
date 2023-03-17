@@ -4,11 +4,7 @@
   import Connector from "./Connector.svelte";
   import { onMount } from "svelte";
   import type { UpdateConnectionLinesEvent } from "src/typescript/events";
-  import { invoke } from "@tauri-apps/api/tauri";
-  import {
-    open as openFileDialog,
-    save as saveFileDialog,
-  } from "@tauri-apps/api/dialog";
+  import { saveFile } from "src/typescript/wrapper";
 
   let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
@@ -72,10 +68,7 @@
   async function testButton() {
     // translationX = translationX == 25 ? 0 : 25;
     // translationY = translationY == 25 ? 0 : 25;
-    invoke("save_file", { storyBlocks: storyBlocks }).then((data: string) => {
-      console.log(data);
-      console.log(JSON.parse(data));
-    });
+    await saveFile(storyBlocks);
 
     // const a = await saveFileDialog();
     // console.log(a);
