@@ -6,6 +6,11 @@
     save as saveFileDialog,
   } from "@tauri-apps/api/dialog";
   import { createEventDispatcher } from "svelte";
+  import type { OpenWorkspaceEvent } from "src/typescript/events";
+
+  interface $$Events {
+    openWorkspace: CustomEvent<OpenWorkspaceEvent>;
+  }
 
   const dispatch = createEventDispatcher();
 
@@ -15,16 +20,19 @@
     });
 
     if (typeof path === "string") {
-      dispatch("openWorkspace", {
-        new: true,
-        path: path,
-      });
+      dispatch("openWorkspace", { new: true, path: path });
     }
-
-    console.log(path);
   }
 
-  function openExisting() {}
+  async function openExisting() {
+    const path = await openFileDialog({
+      filters: [{ extensions: ["cadmus"], name: "Story file" }],
+    });
+
+    if (typeof path === "string") {
+      dispatch("openWorkspace", { new: false, path: path });
+    }
+  }
 </script>
 
 <main class="container h-full">

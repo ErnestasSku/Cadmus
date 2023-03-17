@@ -2,13 +2,17 @@
   import { invoke } from "@tauri-apps/api/tauri";
   import Editor from "./lib/Editor/Editor.svelte";
   import Welcome from "./lib/Startup/Welcome.svelte";
+  import type { OpenWorkspaceEvent } from "./typescript/events";
+  import { updatePath } from "./typescript/wrapper";
 
+  let currentPath: string = null;
   let startupScreen = true;
 
-  function handleOpenWorkspace(e: CustomEvent) {
-    startupScreen = false;
-    console.log(JSON.stringify(e.detail));
-    invoke("update_path", { newPath: e.detail.path });
+  $: startupScreen = currentPath == null;
+
+  async function handleOpenWorkspace(e: CustomEvent<OpenWorkspaceEvent>) {
+    currentPath = e.detail.path;
+    await updatePath(e.detail);
   }
 </script>
 
