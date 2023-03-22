@@ -4,6 +4,7 @@
 )]
 
 mod app;
+mod cadmus_app;
 mod dto;
 mod file_utils;
 mod handle;

@@ -14,6 +14,12 @@ pub struct AppState {
     pub story_data: Vec<StoryBlock>,
 }
 
+impl AppState {
+    pub fn update_path(&mut self, new_path: String) {
+        self.workspace_path = Some(new_path);
+    }
+}
+
 impl Default for AppState {
     fn default() -> Self {
         Self {
@@ -22,5 +28,3 @@ impl Default for AppState {
         }
     }
 }
-
-impl AppState {}
