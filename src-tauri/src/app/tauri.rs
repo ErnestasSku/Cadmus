@@ -13,24 +13,16 @@ pub async fn save_file(story_blocks: StoryBlocks, app: AppHandle) -> Result<(), 
 }
 
 #[tauri::command]
-pub async fn synchronize_story_data(
-    data: Vec<StoryBlock>,
-    state: State<'_, AppStateHandle>,
-) -> Result<(), String> {
-    let mut st = state.lock();
-    st.story_data = data;
-    Ok(())
+pub async fn synchronize_story_data(data: StoryBlocks, app: AppHandle) -> Result<(), String> {
+    app.synchronize_story_data(data)
 }
 
 #[tauri::command]
-pub async fn fetch_story_data(state: State<'_, AppStateHandle>) -> Result<String, String> {
-    let st = state.lock();
-    Ok(serde_json::to_string(&st.story_data).unwrap())
+pub async fn fetch_story_data(app: AppHandle) -> Result<String, String> {
+    app.fetch_story_data()
 }
 
 #[tauri::command]
-pub async fn update_path(new_path: String, state: State<'_, AppStateHandle>) -> Result<(), String> {
-    let mut st = state.lock();
-    st.update_path(new_path);
-    Ok(())
+pub async fn update_path(new_path: String, app: AppHandle) -> Result<(), String> {
+    app.update_path(new_path)
 }
