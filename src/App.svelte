@@ -1,13 +1,19 @@
 <script lang="ts">
   import Editor from "./lib/Editor/Editor.svelte";
   import Welcome from "./lib/Startup/Welcome.svelte";
+  import type { OpenWorkspaceEvent } from "./typescript/events";
+  import { updatePath } from "./typescript/wrapper";
 
+  let currentPath: string = null;
   let startupScreen = true;
 
-  function handleOpenWorkspace(e: CustomEvent) {
-    startupScreen = false;
-    //TODO
-    console.log(e);
+  $: startupScreen = currentPath == null;
+
+  async function handleOpenWorkspace(
+    e: CustomEvent<OpenWorkspaceEvent>
+  ): Promise<void> {
+    currentPath = e.detail.path;
+    await updatePath(e.detail);
   }
 </script>
 

@@ -8,3 +8,8 @@ export interface UpdateConnectionLinesEvent {
   top: number;
   left: number;
 }
+
+export interface OpenWorkspaceEvent {
+  new: boolean;
+  path: string;
+}

@@ -6,25 +6,33 @@
     save as saveFileDialog,
   } from "@tauri-apps/api/dialog";
   import { createEventDispatcher } from "svelte";
+  import type { OpenWorkspaceEvent } from "src/typescript/events";
+
+  interface $$Events {
+    openWorkspace: CustomEvent<OpenWorkspaceEvent>;
+  }
 
   const dispatch = createEventDispatcher();
 
-  async function newStory() {
+  async function newStory(): Promise<void> {
     const path = await saveFileDialog({
       filters: [{ extensions: ["cadmus"], name: "Story File" }],
     });
 
     if (typeof path === "string") {
-      dispatch("openWorkspace", {
-        new: true,
-        path: path,
-      });
+      dispatch("openWorkspace", { new: true, path: path });
     }
-
-    console.log(path);
   }
 
-  function openExisting() {}
+  async function openExisting(): Promise<void> {
+    const path = await openFileDialog({
+      filters: [{ extensions: ["cadmus"], name: "Story file" }],
+    });
+
+    if (typeof path === "string") {
+      dispatch("openWorkspace", { new: false, path: path });
+    }
+  }
 </script>
 
 <main class="container h-full">

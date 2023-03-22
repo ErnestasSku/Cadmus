@@ -3,29 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
 
-pub struct Handle<T>(Arc<Mutex<T>>);
-
-impl<T> Handle<T> {
-    pub fn new(inner: T) -> Self {
-        Self(Arc::new(Mutex::new(inner)))
-    }
-
-    pub fn lock(&self) -> MutexGuard<T> {
-        self.0.lock()
-    }
-}
-
-impl<T> Clone for Handle<T> {
-    fn clone(&self) -> Self {
-        Self(Arc::clone(&self.0))
-    }
-}
-
-impl<T: Default> Default for Handle<T> {
-    fn default() -> Self {
-        Self::new(Default::default())
-    }
-}
+use crate::{dto::StoryBlock, handle::Handle};
 
 pub type AppStateHandle = Handle<AppState>;
 
@@ -33,4 +11,20 @@ pub type AppStateHandle = Handle<AppState>;
 #[serde(rename_all = "camelCase")]
 pub struct AppState {
     pub workspace_path: Option<String>,
+    pub story_data: Vec<StoryBlock>,
+}
+
+impl AppState {
+    pub fn update_path(&mut self, new_path: String) {
+        self.workspace_path = Some(new_path);
+    }
+}
+
+impl Default for AppState {
+    fn default() -> Self {
+        Self {
+            workspace_path: None,
+            story_data: Vec::new(),
+        }
+    }
 }
