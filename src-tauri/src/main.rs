@@ -22,6 +22,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             greet,
             app::tauri::save_file,
+            app::tauri::load_file,
             app::tauri::update_path,
             app::tauri::fetch_story_data,
             app::tauri::synchronize_story_data

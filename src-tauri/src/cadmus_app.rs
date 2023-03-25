@@ -1,8 +1,12 @@
-use crate::{dto::StoryBlock, file_utils, state};
+use crate::{
+    dto::{StoryBlock, StoryBlocks},
+    file_utils, state,
+};
 
 pub trait CadmusApp {
     fn state(&self) -> state::AppStateHandle;
     fn save_file(&self, story_blocks: Vec<StoryBlock>) -> Result<(), String>;
+    fn load_file(&self, story_path: &String) -> Result<StoryBlocks, String>;
     fn synchronize_story_data(&self, data: Vec<StoryBlock>) -> Result<(), String>;
     fn fetch_story_data(&self) -> Result<String, String>;
     fn update_path(&self, new_path: String) -> Result<(), String>;
@@ -22,6 +26,19 @@ impl CadmusApp for tauri::AppHandle {
         }
 
         Ok(())
+    }
+
+    fn load_file(&self, story_path: &String) -> Result<StoryBlocks, String> {
+        let state_handle = self.state();
+        let mut state = state_handle.lock();
+
+        match file_utils::files::read_cadmus_file(&story_path) {
+            Ok(story) => {
+                state.story_data = story.clone();
+                Ok(story)
+            }
+            Err(err) => Err(err),
+        }
     }
 
     fn synchronize_story_data(&self, data: Vec<StoryBlock>) -> Result<(), String> {

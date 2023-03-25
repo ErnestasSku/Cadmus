@@ -10,3 +10,13 @@ export async function updatePath(data: OpenWorkspaceEvent): Promise<void> {
 export async function saveFile(storyBlocks: StoryBlock[]): Promise<void> {
   await invoke("save_file", { storyBlocks: storyBlocks });
 }
+
+export async function loadFile(
+  storyPath: string
+): Promise<StoryBlock[] | string> {
+  try {
+    return await invoke("load_file", { storyPath: storyPath });
+  } catch (error) {
+    return error;
+  }
+}
