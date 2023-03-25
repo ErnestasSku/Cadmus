@@ -56,9 +56,11 @@
 </main>
 
 <style lang="postcss">
-  button:hover {
-    filter: drop-shadow(0 0 2em #36d399);
-    color: #36d399;
+  button {
+    &:hover {
+      filter: drop-shadow(0 0 2em #36d399);
+      color: #36d399;
+    }
   }
   .button-pop-out {
     @apply scale-100 hover:scale-110 duration-300 ease-linear transition-all;

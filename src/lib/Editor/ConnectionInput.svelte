@@ -120,9 +120,9 @@
     background-color: #22d3ee;
     border-radius: 50%;
     margin-top: 0.5em;
-  }
 
-  .dot:hover {
-    @apply scale-100 hover:scale-125 duration-300 ease-linear transition-all;
+    &:hover {
+      @apply scale-100 hover:scale-125 duration-300 ease-linear transition-all;
+    }
   }
 </style>
