@@ -1,15 +1,23 @@
 use serde::Serialize;
 
-use crate::{cadmus_app::CadmusApp, dto::StoryBlock, file_utils, state::AppStateHandle};
+use crate::{
+    cadmus_app::CadmusApp,
+    dto::{StoryBlock, StoryBlocks},
+    file_utils,
+    state::AppStateHandle,
+};
 use tauri::{AppHandle, State};
 
 use crate::state::AppState;
 
-type StoryBlocks = Vec<StoryBlock>;
-
 #[tauri::command]
 pub async fn save_file(story_blocks: StoryBlocks, app: AppHandle) -> Result<(), String> {
     app.save_file(story_blocks)
+}
+
+#[tauri::command]
+pub async fn load_file(story_path: String, app: AppHandle) -> Result<StoryBlocks, String> {
+    app.load_file(&story_path)
 }
 
 #[tauri::command]
