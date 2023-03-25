@@ -251,9 +251,6 @@
 <svelte:window on:mousemove={onmousemove} on:mouseup={onmouseup} />
 
 <style>
-  div {
-  }
-
   main {
     position: absolute;
     top: calc(var(--top) * 1px);

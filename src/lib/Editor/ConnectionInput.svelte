@@ -94,7 +94,7 @@
 
 <svelte:window on:mousemove={onMouseMove} on:mouseup={onMouseUp} />
 
-<style>
+<style lang="postcss">
   div {
     display: flex;
     justify-content: center;
