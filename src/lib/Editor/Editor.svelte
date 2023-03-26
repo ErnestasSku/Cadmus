@@ -163,21 +163,4 @@
     background-color: black;
     width: 100vw;
   }
-
-  #rect {
-    background-color: green;
-    width: 10px;
-    height: 10px;
-    top: 50%;
-    left: 50%;
-    position: relative;
-    transform: translate(-50%, -50%);
-  }
-
-  svg,
-  path {
-    position: absolute;
-    width: 100vw;
-    height: 100vh;
-  }
 </style>
