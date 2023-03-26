@@ -11,12 +11,10 @@ export async function saveFile(storyBlocks: StoryBlock[]): Promise<void> {
   await invoke("save_file", { storyBlocks: storyBlocks });
 }
 
-export async function loadFile(
-  storyPath: string
-): Promise<StoryBlock[] | string> {
+export async function loadFile(storyPath: string): Promise<StoryBlock[]> {
   try {
     return await invoke("load_file", { storyPath: storyPath });
   } catch (error) {
-    return error;
+    return Promise.reject(error);
   }
 }
