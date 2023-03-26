@@ -9,7 +9,7 @@ pub fn write_cadmus_file(path: String, data: StoryBlocks) -> Result<(), String> 
     .map_err(|x| x.to_string())
 }
 
-pub fn read_cadmus_file(path: &String) -> Result<StoryBlocks, String> {
+pub fn read_cadmus_file(path: &str) -> Result<StoryBlocks, String> {
     let content = fs::read(path);
     match content {
         Ok(content) => serde_json::from_slice::<StoryBlocks>(&content).map_err(|x| x.to_string()),
