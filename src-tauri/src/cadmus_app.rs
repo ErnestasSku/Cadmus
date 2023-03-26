@@ -22,10 +22,10 @@ impl CadmusApp for tauri::AppHandle {
         let state_handle = self.state();
         let state = state_handle.lock();
         if let Some(path) = &state.workspace_path {
-            file_utils::files::write_cadmus_file(path.to_string(), story_blocks);
+            file_utils::files::write_cadmus_file(path.to_string(), story_blocks)
+        } else {
+            Err("Internal error happened. Could not find the path".to_string())
         }
-
-        Ok(())
     }
 
     fn load_file(&self, story_path: &String) -> Result<StoryBlocks, String> {
