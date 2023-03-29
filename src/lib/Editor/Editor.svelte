@@ -6,7 +6,7 @@
   import type { UpdateConnectionLinesEvent } from "src/typescript/events";
   import { saveFile } from "../../typescript/wrapper";
 
-  let storyBlocks: StoryBlock[] = [];
+  export let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
   let capturedMouse: Boolean = false;
   let translationX: number = 0;
@@ -21,6 +21,10 @@
   function addNew(): void {
     let newData = storyInputData();
     storyBlocks = [...storyBlocks, newData];
+  }
+
+  async function saveStory() {
+    await saveFile(storyBlocks);
   }
 
   function storyInputData(): StoryBlock {
@@ -66,7 +70,7 @@
   }
 
   async function testButton() {
-    await saveFile(storyBlocks);
+    // await saveFile(storyBlocks);
   }
 
   function updatedConnectionLines(
@@ -91,12 +95,14 @@
   onMount(() => {
     canvasOffsetX = canvas.offsetLeft;
     canvasOffsetY = canvas.offsetTop;
+    console.log("editor mounted", storyBlocks);
   });
 </script>
 
 <main>
   <div id="top-section">
     <button class="btn btn-accent" on:click={addNew}>Add new story</button>
+    <button class="btn btn-accent" on:click={saveStory}>Save</button>
     <button class="btn btn-secondary" on:click={testButton}>Test button</button>
   </div>
 
