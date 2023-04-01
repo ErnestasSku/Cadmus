@@ -34,6 +34,8 @@
       connections: [],
       index: storyBlocks.length,
       initializing: true,
+      storyContent: "",
+      storyId: "",
     };
   }
 
@@ -120,6 +122,8 @@
         bind:index={storyBlock.index}
         bind:connections={storyBlock.connections}
         bind:initializing={storyBlock.initializing}
+        bind:storyId={storyBlock.storyId}
+        bind:storyContent={storyBlock.storyContent}
         {translationX}
         {translationY}
         offsetX={canvasOffsetX}

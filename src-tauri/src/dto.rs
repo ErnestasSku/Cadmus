@@ -7,6 +7,12 @@ pub struct StoryBlock {
     top: f32,
     left: f32,
     connections: Vec<Connection>,
+    #[serde(default)]
+    initializing: bool,
+    #[serde(default)]
+    story_id: String,
+    #[serde(default)]
+    story_content: String,
 }
 
 pub type StoryBlocks = Vec<StoryBlock>;

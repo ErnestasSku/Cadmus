@@ -4,6 +4,8 @@ export interface StoryBlock {
   left: number;
   connections: Connection[];
   initializing: boolean;
+  storyId: string;
+  storyContent: string;
 }
 
 export interface Connection {
