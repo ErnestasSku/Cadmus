@@ -6,7 +6,7 @@
   import type { UpdateConnectionLinesEvent } from "src/typescript/events";
   import { saveFile } from "../../typescript/wrapper";
 
-  let storyBlocks: StoryBlock[] = [];
+  export let storyBlocks: StoryBlock[] = [];
   let moving: Boolean = false;
   let capturedMouse: Boolean = false;
   let translationX: number = 0;
@@ -23,12 +23,17 @@
     storyBlocks = [...storyBlocks, newData];
   }
 
+  async function saveStory() {
+    await saveFile(storyBlocks);
+  }
+
   function storyInputData(): StoryBlock {
     return {
-      top: windowHeight / 2 - translationY,
-      left: windowWidth / 2 - translationX,
+      top: windowHeight / 2 - translationY - canvasOffsetY,
+      left: windowWidth / 2 - translationX - canvasOffsetX,
       connections: [],
       index: storyBlocks.length,
+      initializing: true,
     };
   }
 
@@ -66,7 +71,7 @@
   }
 
   async function testButton() {
-    await saveFile(storyBlocks);
+    // await saveFile(storyBlocks);
   }
 
   function updatedConnectionLines(
@@ -91,12 +96,14 @@
   onMount(() => {
     canvasOffsetX = canvas.offsetLeft;
     canvasOffsetY = canvas.offsetTop;
+    console.log("editor mounted", storyBlocks);
   });
 </script>
 
 <main>
   <div id="top-section">
     <button class="btn btn-accent" on:click={addNew}>Add new story</button>
+    <button class="btn btn-accent" on:click={saveStory}>Save</button>
     <button class="btn btn-secondary" on:click={testButton}>Test button</button>
   </div>
 
@@ -112,8 +119,11 @@
         bind:left={storyBlock.left}
         bind:index={storyBlock.index}
         bind:connections={storyBlock.connections}
+        bind:initializing={storyBlock.initializing}
         {translationX}
         {translationY}
+        offsetX={canvasOffsetX}
+        offsetY={canvasOffsetY}
         on:captureMouse={captureMouse}
         on:releaseMouse={releaseMouse}
         on:updatedConnectionLines={updatedConnectionLines}
