@@ -17,6 +17,8 @@
   export let translationX: number;
   export let translationY: number;
   export let initializing: boolean;
+  export let storyId: string;
+  export let storyContent: string;
   export let offsetX: number;
   export let offsetY: number;
 
@@ -191,12 +193,14 @@
     <input
       class="input mt-5 w-full"
       placeholder="Story ID"
+      bind:value={storyId}
       on:mouseenter={captureMouse}
       on:mouseleave={releaseMouse}
     />
     <textarea
       class="textarea mt-1 w-full "
       placeholder="Story content"
+      bind:value={storyContent}
       on:mouseenter={captureMouse}
       on:mouseleave={releaseMouse}
     />
