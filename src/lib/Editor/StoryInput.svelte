@@ -16,6 +16,9 @@
   export let index: number;
   export let translationX: number;
   export let translationY: number;
+  export let initializing: boolean;
+  export let offsetX: number;
+  export let offsetY: number;
 
   let StoryInput: HTMLElement;
   let add: boolean = false;
@@ -161,7 +164,10 @@
   }
 
   onMount(() => {
-    adjustSize();
+    if (initializing) {
+      adjustSize();
+      initializing = false;
+    }
   });
 </script>
 

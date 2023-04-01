@@ -29,10 +29,11 @@
 
   function storyInputData(): StoryBlock {
     return {
-      top: windowHeight / 2 - translationY,
-      left: windowWidth / 2 - translationX,
+      top: windowHeight / 2 - translationY - canvasOffsetY,
+      left: windowWidth / 2 - translationX - canvasOffsetX,
       connections: [],
       index: storyBlocks.length,
+      initializing: true,
     };
   }
 
@@ -118,8 +119,11 @@
         bind:left={storyBlock.left}
         bind:index={storyBlock.index}
         bind:connections={storyBlock.connections}
+        bind:initializing={storyBlock.initializing}
         {translationX}
         {translationY}
+        offsetX={canvasOffsetX}
+        offsetY={canvasOffsetY}
         on:captureMouse={captureMouse}
         on:releaseMouse={releaseMouse}
         on:updatedConnectionLines={updatedConnectionLines}

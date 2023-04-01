@@ -3,6 +3,7 @@ export interface StoryBlock {
   top: number;
   left: number;
   connections: Connection[];
+  initializing: boolean;
 }
 
 export interface Connection {
